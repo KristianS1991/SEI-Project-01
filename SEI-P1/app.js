@@ -17,70 +17,39 @@ const rightKey = 39
 const downKey = 40
 
 
-
-// make the grid
-for(let i = 0; i < width ** 2; i++) {
-  const square = document.createElement('DIV')
-  if(i < width || i % width === 0 || i % width === width - 1 || i > width * width - width) { square.classList.add('wall')
-  }
-
-  board.appendChild(square)
-  squares.push(square)
-
-  if(!(i < width || i % width === 0 || i % width === width - 1 || i > width * width - width)) {
-    square.classList.add('dots')
-  }
-
-}
-
-for (let i = 0; i < bigDots.length; i++) {
-      squares[bigDots[i]].classList.add('big-dots')
-      squares[bigDots[i]].classList.remove('dots')
+//refactored function creating the board
+function createBoard() {
+  for(let i = 0; i < width ** 2; i++) {
+    const square = document.createElement('DIV')
+    if(i < width || i % width === 0 || i % width === width - 1 || i > width * width - width) { square.classList.add('wall')
     }
-
-// add the dynamic styling for the direction and step in which pacman and the ghosts move
-// function moveStyle(index) {
-//   currentStep = currentStep === 3 ? 0 : currentStep + 1
-//   squares[index].setAttribute('data-step', currentStep)
-//   squares[index].setAttribute('data-direction', charDirection)
-// }
-
-//function to eat the dots and ghosts (if blue) and increase the score
-// function eatDotsAndGhosts(index,intervalId) {
-//   //eat the little dots and increase the score by 1
-//   if(squares[index].classList.contains('pacman') && squares[index].classList.contains('dots')) {
-//     squares[index].classList.remove('dots')
-//     score++
-//     console.log(score)
-//   }
-//
-//   if(squares[index].classList.contains('pacman') && squares[index].classList.contains('big-dots')) {
-//     squares[index].classList.remove('big-dots')
-//     score += 50
-//     console.log(score)
-//   }
-//
-//   if(squares[index].classList.contains('pacman') && squares[index].classList.contains('ghost')) {
-//     squares[index].classList.remove('pacman')
-//     clearInterval(intervalId)
-//
-//     console.log('pacman is dead')
-//   }
-// }
-
-// function ghostEatsPacman(index, intervalId) {
-//   if(squares[index].classList.contains('pacman') && squares[index].classList.contains('ghost') {
-//
-//
-//
-//   }
-// }
-
-
-function consoleTrial(index, direction) {
-  console.log(index, direction)
+    board.appendChild(square)
+    squares.push(square)
+    if(!(i < width || i % width === 0 || i % width === width - 1 || i > width * width - width)) {
+      square.classList.add('dots')
+    }
+  }
+  for (let i = 0; i < bigDots.length; i++) {
+        squares[bigDots[i]].classList.add('big-dots')
+        squares[bigDots[i]].classList.remove('dots')
+      }
 }
 
+//function to check if Pacman and the ghosts crosspaths, if so end the game
+function ghostKillPacmanCheck() {
+    ghosts.forEach(ghost => {
+      if(squares[ghost.index].classList.contains('pacman') && !ghostsBlue) {
+        //squares.forEach(index => squares[index].classList.remove('pacman'))
+        clearInterval(checkLoseInterval)
+        gameInPlay = false
+        console.log('you lose')
+    }
+  })
+}
+
+
+
+//Base class for creating the characters, everything within this class is shared by pacman and the ghosts
 class Character {
   constructor(className, classType, index) {
     this.className = className
@@ -110,17 +79,6 @@ class Character {
 
       this.moveStyle()
       this.eatDotsAndGhosts()
-
-      // if(this.className === 'pacman') {
-      //     moveStyle(this.index)
-      //     //eatDotsAndGhosts(this.index,this.intervalId)
-      //   }
-
-      // } else if (this.className === 'ghost') {
-      //   ghostEatsPacman(this.index, player.intervalId)
-      // }
-
-
 
       }, 200)
 
@@ -193,23 +151,8 @@ class Pacman extends Character {
         score += 50
         //turn the ghosts blue when the big dots are eaten
         //ghostsBlue = true
-
-        //console.log(score)
-        //console.log(ghostsBlue)
-
       }
-
-      //might want to do this outside as a global intervalcheck, at a lower interval, the below only kindof works
-      // if(squares[this.index].classList.contains('ghost') && !ghostsBlue) {
-      //   squares[this.index].classList.remove('pacman')
-      //   clearInterval(this.intervalId)
-      //   console.log('pacman is dead')
-      //   gameInPlay = false
-      // }
-
     }
-
-
 }
 
 class Ghost extends Character {
@@ -228,10 +171,10 @@ class Ghost extends Character {
 
   }
 
-
-
 }
 
+
+createBoard()
 
 const player = new Pacman('pacman', 'player', width + 1)
 
@@ -243,32 +186,23 @@ const ghosts = [
 ]
 
 //set an interval on a smaller increment to check if each ghost space contains pacman and the ghost, then kill pacman and stop the game
-let checkLoseInterval = setInterval(() => {
+let checkLoseInterval = setInterval(() => {ghostKillPacmanCheck()}, 5)
 
-  ghosts.forEach(ghost => {
-    if(squares[ghost.index].classList.contains('pacman') && !ghostsBlue) {
-      //squares.forEach(index => squares[index].classList.remove('pacman'))
-
-      clearInterval(checkLoseInterval)
-      gameInPlay = false
-      console.log('you lose')
-
-      // livesCount--
-      // if (livesCount === 0) clearInterval(checkLoseInterval)
-      // gameInPlay = livesCount === 0 ? false : true
-      // console.log(livesCount)
-  }
-})
-
-}, 5)
-
-
-// if(squares[this.index].classList.contains('ghost') && !ghostsBlue) {
-//   squares[this.index].classList.remove('pacman')
-//   clearInterval(this.intervalId)
-//   console.log('pacman is dead')
-//   gameInPlay = false
+// function ghostKillPacmanCheck() {
+//     ghosts.forEach(ghost => {
+//       if(squares[ghost.index].classList.contains('pacman') && !ghostsBlue) {
+//         //squares.forEach(index => squares[index].classList.remove('pacman'))
+//         clearInterval(checkLoseInterval)
+//         gameInPlay = false
+//         console.log('you lose')
+//     }
+//   })
 // }
+
+
+
+
+
 
 
 })
