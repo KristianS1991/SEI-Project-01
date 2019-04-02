@@ -109,7 +109,7 @@ class Character {
       squares[this.index].classList.add(this.className, this.classType)
 
       this.moveStyle()
-      //this.eatDotsAndGhosts()
+      this.eatDotsAndGhosts()
 
       // if(this.className === 'pacman') {
       //     moveStyle(this.index)
@@ -180,29 +180,31 @@ class Pacman extends Character {
     squares[this.index].setAttribute('data-direction', charDirection)
   }
 
-  // eatDotsAndGhosts() {
-  //   function eatDotsAndGhosts(index,intervalId) {
-  //     //eat the little dots and increase the score by 1
-  //     if(squares[index].classList.contains('pacman') && squares[index].classList.contains('dots')) {
-  //       squares[index].classList.remove('dots')
-  //       score++
-  //       console.log(score)
-  //     }
-  //
-  //     if(squares[index].classList.contains('pacman') && squares[index].classList.contains('big-dots')) {
-  //       squares[index].classList.remove('big-dots')
-  //       score += 50
-  //       console.log(score)
-  //     }
-  //
-  //     if(squares[index].classList.contains('pacman') && squares[index].classList.contains('ghost')) {
-  //       squares[index].classList.remove('pacman')
-  //       clearInterval(intervalId)
-  //
-  //       console.log('pacman is dead')
-  //     }
-  //   }
-  // }
+  eatDotsAndGhosts() {
+      //eat the little dots and increase the score by 1
+      if(squares[this.index].classList.contains('dots')) {
+        squares[this.index].classList.remove('dots')
+        score++
+        console.log(score)
+      }
+      //eat the big dots and increase the score by 50
+      if(squares[this.index].classList.contains('big-dots')) {
+        squares[this.index].classList.remove('big-dots')
+        score += 50
+        console.log(score)
+      }
+
+      //might want to do this outside as a global intervalcheck, at a lower interval, the below only kindof works
+      if(squares[this.index].classList.contains('ghost')) {
+        squares[this.index].classList.remove('pacman')
+        clearInterval(this.intervalId)
+        console.log('pacman is dead')
+        gameInPlay = false
+      }
+
+
+    }
+
 
 }
 
@@ -222,13 +224,6 @@ class Ghost extends Character {
 
   }
 
-  moveStyle() {
-    // moveStyle is only applied to pacman, for the ghost it is an empty function
-  }
-
-  // eatDotsAndGhosts() {
-  //   // eatDotsAndGhosts is only applied to pacman, for the ghost it is an empty function
-  // }
 
 
 }
