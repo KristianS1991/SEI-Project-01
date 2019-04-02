@@ -92,7 +92,11 @@
   background-repeat: no-repeat;
 }
 
-
+.blue {
+  background-image: url(images/blueghostgif.gif);
+  background-size: contain;
+  background-repeat: no-repeat;
+}
 
 .wall {
   background-color: coral;

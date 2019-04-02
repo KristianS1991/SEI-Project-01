@@ -1,13 +1,17 @@
 document.addEventListener('DOMContentLoaded', function() {
-
+//variables related to the board
 const width = 18
 const board = document.querySelector('.board')
 const squares = []
+//variable for stopping/starting the game
 let gameInPlay = true
 let charDirection = 'right'
 let currentStep = 0
+//variables related to the blue ghosts behavior
 let ghostsBlue = false
 let blueCount = 0
+let intervalBlue = 0
+//variables for score dots and lives
 let score = 0
 let bigDots = [width * 4 + 5, width * 4 + 13, width * (width - 4) + 5, width * (width - 3) - 5, width + 2]
 let livesCount = 3
@@ -47,6 +51,25 @@ function ghostKillPacmanCheck() {
   })
 }
 
+function blueGhostInterval() {
+  //clear the previous interval if it exists
+  blueCount = 0
+  clearInterval(intervalBlue)
+
+
+  //turn the ghosts blue when the big dots are eaten, for ten seconds
+  intervalBlue = setInterval(() => {
+    ghostsBlue = true
+    blueCount++
+    if(blueCount === 10) {
+      clearInterval(intervalBlue)
+      ghostsBlue = false
+      }
+    }, 1000)
+
+
+}
+
 //Base class for creating the characters, everything within this class is shared by pacman and the ghosts
 class Character {
   constructor(className, classType, index) {
@@ -77,6 +100,7 @@ class Character {
 
       this.moveStyle()
       this.eatDotsAndGhosts()
+      this.turnGhostsBlue()
 
       }, 200)
 
@@ -89,7 +113,7 @@ class Character {
   //initialize empty functions for character dependent functions, functions defined below
   moveStyle() {}
   eatDotsAndGhosts() {}
-
+  turnGhostsBlue() {}
 
 }
 
@@ -97,10 +121,7 @@ class Pacman extends Character {
 
   constructor(className, classType, index) {
     super(className, classType, index)
-
     this.addEventListeners()
-
-
   }
 
   addEventListeners() {
@@ -119,10 +140,8 @@ class Pacman extends Character {
                  charDirection = 'down'
           break
       }
-
       this.move()
     })
-
   }
 
   moveStyle() {
@@ -142,15 +161,7 @@ class Pacman extends Character {
       if(squares[this.index].classList.contains('big-dots')) {
         squares[this.index].classList.remove('big-dots')
         score += 50
-        //turn the ghosts blue when the big dots are eaten, for ten seconds
-        let intervalBlue = setInterval(() => {
-          ghostsBlue = true
-          blueCount++
-          if(blueCount === 10) {
-            clearInterval(intervalBlue)
-            ghostsBlue = false
-        }}, 1000)
-
+        blueGhostInterval()
       }
     }
 }
@@ -159,6 +170,7 @@ class Ghost extends Character {
   constructor(className, classType, index) {
     super(className, classType, index)
 
+    this.originalClass = className
     this.options = [width, 1, -width, -1]
     this.direction = this.options[Math.floor(Math.random() * this.options.length)]
     this.move()
@@ -169,6 +181,21 @@ class Ghost extends Character {
     this.direction = this.options[Math.floor(Math.random() * this.options.length)]
     this.move()
 
+  }
+
+  turnGhostsBlue() {
+    //console.log('original class', this.originalClass)
+    if(ghostsBlue) {
+      this.className = 'blue'
+    } else {
+      this.className = this.originalClass
+      squares.forEach(square => square.classList.remove('blue'))
+    }
+
+
+    // else if (!ghostsBlue) {
+    //   squares[this.index].classList.remove('blue')
+    // }
   }
 
 }
@@ -188,8 +215,17 @@ const ghosts = [
 //set an interval on a small increment, calling the ghostKillPacmanCheck function
 let checkLoseInterval = setInterval(() => {ghostKillPacmanCheck()}, 5)
 
+//add blue class to the ghosts if ghostBlue is true
+// while (ghostsBlue) {
+//   console.log('hello')
+// }
 
-
+//remove blue class from the ghosts if ghostBlue is false
+// if(!ghostsBlue) {
+//   ghosts.forEach(ghost => {
+//     ghost.classList.remove('blue')
+//   })
+// }
 
 
 
