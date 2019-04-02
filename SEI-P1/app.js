@@ -39,34 +39,34 @@ for (let i = 0; i < bigDots.length; i++) {
     }
 
 // add the dynamic styling for the direction and step in which pacman and the ghosts move
-function moveStyle(index) {
-  currentStep = currentStep === 3 ? 0 : currentStep + 1
-  squares[index].setAttribute('data-step', currentStep)
-  squares[index].setAttribute('data-direction', charDirection)
-}
+// function moveStyle(index) {
+//   currentStep = currentStep === 3 ? 0 : currentStep + 1
+//   squares[index].setAttribute('data-step', currentStep)
+//   squares[index].setAttribute('data-direction', charDirection)
+// }
 
 //function to eat the dots and ghosts (if blue) and increase the score
-function eatDotsAndGhosts(index,intervalId) {
-  //eat the little dots and increase the score by 1
-  if(squares[index].classList.contains('pacman') && squares[index].classList.contains('dots')) {
-    squares[index].classList.remove('dots')
-    score++
-    console.log(score)
-  }
-
-  if(squares[index].classList.contains('pacman') && squares[index].classList.contains('big-dots')) {
-    squares[index].classList.remove('big-dots')
-    score += 50
-    console.log(score)
-  }
-
-  if(squares[index].classList.contains('pacman') && squares[index].classList.contains('ghost')) {
-    squares[index].classList.remove('ghost')
-    clearInterval(intervalId)
-
-    console.log('pacman is dead')
-  }
-}
+// function eatDotsAndGhosts(index,intervalId) {
+//   //eat the little dots and increase the score by 1
+//   if(squares[index].classList.contains('pacman') && squares[index].classList.contains('dots')) {
+//     squares[index].classList.remove('dots')
+//     score++
+//     console.log(score)
+//   }
+//
+//   if(squares[index].classList.contains('pacman') && squares[index].classList.contains('big-dots')) {
+//     squares[index].classList.remove('big-dots')
+//     score += 50
+//     console.log(score)
+//   }
+//
+//   if(squares[index].classList.contains('pacman') && squares[index].classList.contains('ghost')) {
+//     squares[index].classList.remove('pacman')
+//     clearInterval(intervalId)
+//
+//     console.log('pacman is dead')
+//   }
+// }
 
 // function ghostEatsPacman(index, intervalId) {
 //   if(squares[index].classList.contains('pacman') && squares[index].classList.contains('ghost') {
@@ -76,21 +76,6 @@ function eatDotsAndGhosts(index,intervalId) {
 //   }
 // }
 
-// function characterMove(index, direction, className) {
-//   if(squares[index + direction].classList.contains('wall')) {
-//     this.stopMove()
-//     return false
-//   }
-//   squares[index].classList.remove(className)
-//
-//   index += direction
-//   squares[index].classList.add(className)
-//
-//   if(className === 'pacman') {
-//       moveStyle(index)
-//       eatDotsAndGhosts(index)
-//     }
-//   }
 
 function consoleTrial(index, direction) {
   console.log(index, direction)
@@ -123,13 +108,14 @@ class Character {
       this.index += this.direction
       squares[this.index].classList.add(this.className, this.classType)
 
-      console.log(squares[this.index].classList)
+      this.moveStyle()
+      //this.eatDotsAndGhosts()
 
+      // if(this.className === 'pacman') {
+      //     moveStyle(this.index)
+      //     //eatDotsAndGhosts(this.index,this.intervalId)
+      //   }
 
-      if(this.className === 'pacman') {
-          moveStyle(this.index)
-          eatDotsAndGhosts(this.index,this.intervalId)
-        }
       // } else if (this.className === 'ghost') {
       //   ghostEatsPacman(this.index, player.intervalId)
       // }
@@ -143,6 +129,11 @@ class Character {
   stopMove() {
     clearInterval(this.intervalId)
   }
+
+  moveStyle() {}
+  eatDotsAndGhosts() {}
+
+
 }
 
 class Pacman extends Character {
@@ -154,8 +145,6 @@ class Pacman extends Character {
 
 
   }
-
-
 
   addEventListeners() {
     document.addEventListener('keydown', (e) => {
@@ -174,9 +163,47 @@ class Pacman extends Character {
           break
       }
 
+      // moveStyle() {
+      //   currentStep = currentStep === 3 ? 0 : currentStep + 1
+      //   squares[this.index].setAttribute('data-step', currentStep)
+      //   squares[this.index].setAttribute('data-direction', charDirection)
+      // }
+
       this.move()
     })
+
   }
+
+  moveStyle() {
+    currentStep = currentStep === 3 ? 0 : currentStep + 1
+    squares[this.index].setAttribute('data-step', currentStep)
+    squares[this.index].setAttribute('data-direction', charDirection)
+  }
+
+  // eatDotsAndGhosts() {
+  //   function eatDotsAndGhosts(index,intervalId) {
+  //     //eat the little dots and increase the score by 1
+  //     if(squares[index].classList.contains('pacman') && squares[index].classList.contains('dots')) {
+  //       squares[index].classList.remove('dots')
+  //       score++
+  //       console.log(score)
+  //     }
+  //
+  //     if(squares[index].classList.contains('pacman') && squares[index].classList.contains('big-dots')) {
+  //       squares[index].classList.remove('big-dots')
+  //       score += 50
+  //       console.log(score)
+  //     }
+  //
+  //     if(squares[index].classList.contains('pacman') && squares[index].classList.contains('ghost')) {
+  //       squares[index].classList.remove('pacman')
+  //       clearInterval(intervalId)
+  //
+  //       console.log('pacman is dead')
+  //     }
+  //   }
+  // }
+
 }
 
 class Ghost extends Character {
@@ -194,6 +221,16 @@ class Ghost extends Character {
     this.move()
 
   }
+
+  moveStyle() {
+    // moveStyle is only applied to pacman, for the ghost it is an empty function
+  }
+
+  // eatDotsAndGhosts() {
+  //   // eatDotsAndGhosts is only applied to pacman, for the ghost it is an empty function
+  // }
+
+
 }
 
 
