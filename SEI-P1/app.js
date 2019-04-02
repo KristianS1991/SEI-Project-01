@@ -21,6 +21,9 @@ const upKey = 38
 const rightKey = 39
 const downKey = 40
 
+
+
+
 //refactored function creating the board
 function createBoard() {
   for(let i = 0; i < width ** 2; i++) {
@@ -55,8 +58,6 @@ function blueGhostInterval() {
   //clear the previous interval if it exists
   blueCount = 0
   clearInterval(intervalBlue)
-
-
   //turn the ghosts blue when the big dots are eaten, for ten seconds
   intervalBlue = setInterval(() => {
     ghostsBlue = true
@@ -66,8 +67,6 @@ function blueGhostInterval() {
       ghostsBlue = false
       }
     }, 1000)
-
-
 }
 
 //Base class for creating the characters, everything within this class is shared by pacman and the ghosts
@@ -110,7 +109,7 @@ class Character {
     clearInterval(this.intervalId)
   }
 
-  //initialize empty functions for character dependent functions, functions defined below
+  //initialize empty functions for character dependent functions, functions defined in subclasses below
   moveStyle() {}
   eatDotsAndGhosts() {}
   turnGhostsBlue() {}
@@ -163,6 +162,7 @@ class Pacman extends Character {
         score += 50
         blueGhostInterval()
       }
+
     }
 }
 
@@ -187,9 +187,16 @@ class Ghost extends Character {
     //console.log('original class', this.originalClass)
     if(ghostsBlue) {
       this.className = 'blue'
+
+      // let originalColor = document.querySelector(this.originalClass)
+      // originalColor.classList.remove(this.originalClass)
+      squares.forEach(square => square.classList.remove(this.originalClass))
+
     } else {
+
       this.className = this.originalClass
       squares.forEach(square => square.classList.remove('blue'))
+
     }
 
 
