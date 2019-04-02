@@ -1,0 +1,99 @@
+* {
+  box-sizing: border-box;
+}
+
+.board {
+  width: 600px;
+  height: 600px;
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+  background-color: black;
+}
+
+.board div {
+  width: calc(100%/18);
+  height: calc(100%/18);
+  border: 1px solid;
+}
+
+.dots {
+  background-image: url(images/pacman-dots.png);
+}
+
+.big-dots {
+  background-image: url(images/big-dots.png);
+}
+
+.pacman {
+  background-color: #ccc;
+  background-image: url(images/mspacman-mouth-0.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.pacman[data-direction="left"] {
+  transform: scaleX(1);
+}
+
+.pacman[data-direction="right"] {
+  transform: scaleX(-1);
+}
+
+.pacman[data-direction="up"] {
+  transform: rotate(90deg);
+}
+
+.pacman[data-direction="down"] {
+  transform: rotate(-90deg);
+}
+
+.pacman[data-step="0"] {
+  background-image: url(images/mspacman-mouth-0.png);
+  background-size: cover;
+}
+
+.pacman[data-step="1"] {
+  background-image: url(images/mspacman-mouth-1.png);
+  background-size: cover;
+}
+
+.pacman[data-step="2"] {
+  background-image: url(images/mspacman-mouth-2.png);
+  background-size: cover;
+}
+
+.pacman[data-step="3"] {
+  background-image: url(images/mspacman-mouth-1.png);
+  background-size: cover;
+}
+
+.green.ghost {
+  background-image: url(images/greenghostgif.gif);
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.pink.ghost {
+  background-image: url(images/pinkghostgif.gif);
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.orange.ghost {
+  background-image: url(images/orangegifghost.gif);
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.red.ghost {
+  background-image: url(images/redghostgif.gif);
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+
+
+.wall {
+  background-color: coral;
+}
