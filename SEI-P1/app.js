@@ -100,6 +100,7 @@ class Character {
       this.moveStyle()
       this.eatDotsAndGhosts()
       this.turnGhostsBlue()
+      this.blueGhostsDie()
 
       }, 200)
 
@@ -110,9 +111,10 @@ class Character {
   }
 
   //initialize empty functions for character dependent functions, functions defined in subclasses below
-  moveStyle() {}
-  eatDotsAndGhosts() {}
-  turnGhostsBlue() {}
+  moveStyle() {} //applies only to pacman
+  eatDotsAndGhosts() {} //applies only to pacman
+  turnGhostsBlue() {} //applies only to ghosts
+  blueGhostsDie() {} //applies only to ghosts
 
 }
 
@@ -162,7 +164,6 @@ class Pacman extends Character {
         score += 50
         blueGhostInterval()
       }
-
     }
 }
 
@@ -199,11 +200,23 @@ class Ghost extends Character {
 
     }
 
-
-    // else if (!ghostsBlue) {
-    //   squares[this.index].classList.remove('blue')
-    // }
   }
+
+  blueGhostsDie() {
+    if(ghostsBlue && squares[this.index].classList.contains('pacman')) {
+
+      this.className = 'dead'
+
+      clearInterval(this.intervalId)
+      squares[this.index].classList.remove('blue')
+      score+=100
+      console.log('blue ghost killed')
+
+      //reset ghosts - can you generate new classes in a function?
+
+    }
+  }
+
 
 }
 
