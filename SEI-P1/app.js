@@ -9,7 +9,7 @@ let currentStep = 0
 let ghostsBlue = false
 let score = 0
 let bigDots = [width * 4 + 5, width * 4 + 13, width * (width - 4) + 5, width * (width - 3) - 5, width + 2]
-
+let livesCount = 3
 //initilize variables for each arrow key
 const leftKey = 37
 const upKey = 38
@@ -185,23 +185,27 @@ class Pacman extends Character {
       if(squares[this.index].classList.contains('dots')) {
         squares[this.index].classList.remove('dots')
         score++
-        console.log(score)
+        //console.log(score)
       }
-      //eat the big dots and increase the score by 50
+      //eat the big dots and increase the score by 50 set the ghostsBlue to be true
       if(squares[this.index].classList.contains('big-dots')) {
         squares[this.index].classList.remove('big-dots')
         score += 50
-        console.log(score)
+        //turn the ghosts blue when the big dots are eaten
+        //ghostsBlue = true
+
+        //console.log(score)
+        //console.log(ghostsBlue)
+
       }
 
       //might want to do this outside as a global intervalcheck, at a lower interval, the below only kindof works
-      if(squares[this.index].classList.contains('ghost')) {
-        squares[this.index].classList.remove('pacman')
-        clearInterval(this.intervalId)
-        console.log('pacman is dead')
-        gameInPlay = false
-      }
-
+      // if(squares[this.index].classList.contains('ghost') && !ghostsBlue) {
+      //   squares[this.index].classList.remove('pacman')
+      //   clearInterval(this.intervalId)
+      //   console.log('pacman is dead')
+      //   gameInPlay = false
+      // }
 
     }
 
@@ -238,11 +242,33 @@ const ghosts = [
   new Ghost('red', 'ghost', 240)
 ]
 
+//set an interval on a smaller increment to check if each ghost space contains pacman and the ghost, then kill pacman and stop the game
+let checkLoseInterval = setInterval(() => {
+
+  ghosts.forEach(ghost => {
+    if(squares[ghost.index].classList.contains('pacman') && !ghostsBlue) {
+      //squares.forEach(index => squares[index].classList.remove('pacman'))
+
+      clearInterval(checkLoseInterval)
+      gameInPlay = false
+      console.log('you lose')
+
+      // livesCount--
+      // if (livesCount === 0) clearInterval(checkLoseInterval)
+      // gameInPlay = livesCount === 0 ? false : true
+      // console.log(livesCount)
+  }
+})
+
+}, 5)
 
 
-
-
-
+// if(squares[this.index].classList.contains('ghost') && !ghostsBlue) {
+//   squares[this.index].classList.remove('pacman')
+//   clearInterval(this.intervalId)
+//   console.log('pacman is dead')
+//   gameInPlay = false
+// }
 
 
 })
