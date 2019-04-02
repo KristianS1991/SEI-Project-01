@@ -213,7 +213,8 @@ class Ghost extends Character {
       console.log('blue ghost killed')
 
       //reset ghosts - can you generate new classes in a function?
-
+      //use a setTimeout function which resets (this.index, this.className (to this.originalClass)
+      //after 5 seconds give or take
     }
   }
 
