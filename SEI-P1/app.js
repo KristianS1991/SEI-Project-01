@@ -8,8 +8,8 @@ let gameInPlay = true
 let charDirection = 'right'
 let currentStep = 0
 //variables related to the blue ghosts behavior
-let ghostsBlue = false
-let blueCount = 0
+//let ghostsBlue = false
+//let blueCount = 0
 let intervalBlue = 0
 //variables for score dots and lives
 let score = 0
@@ -45,17 +45,21 @@ function createBoard() {
 function collisionCheck() {
   ghosts.forEach(ghost => {
     if(squares[ghost.index].classList.contains('pacman') && ghost.className !== 'dead') {
-      if(!ghostsBlue) {
+      if(!ghost.isBlue) {
         //squares.forEach(index => squares[index].classList.remove('pacman'))
         clearInterval(checkLoseInterval)
         gameInPlay = false
         console.log('you lose')
       } else {
-        // "if(ghostsBlue)" - ghosts are blue, so pacman eats ghost
+        // "if(ghost.isBlue)" - ghosts are blue, so pacman eats ghost
         //move blue ghosts die to here
         ghost.className = 'dead'
 
         clearInterval(ghost.intervalId)
+
+        //clear blue interval after collision
+        clearInterval(ghost.blueInterval)
+
         squares[ghost.index].classList.remove('blue')
         score+=100
         console.log('blue ghost killed')
@@ -68,23 +72,24 @@ function collisionCheck() {
   })
 }
 
-//this function sets the variable ghostsBlue to true for 10 seconds
+//this function sets the variable ghost.isBlue to true for 10 seconds
 function blueGhostInterval() {
 
-  //reset the been reset option of the ghosts to false so that they can be turned blue again
-  ghosts.forEach(ghost => ghost.beenReset = false)
+  ghosts.forEach(ghost => {
   //clear the previous interval if it exists
-  blueCount = 0
-  clearInterval(intervalBlue)
+  ghost.blueCount = 0
+  clearInterval(ghost.blueInterval)
   //turn the ghosts blue when the big dots are eaten, for ten seconds
-  intervalBlue = setInterval(() => {
-    ghostsBlue = true
-    blueCount++
-    if(blueCount === 10) {
-      clearInterval(intervalBlue)
-      ghostsBlue = false
+
+  ghost.blueInterval = setInterval(() => {
+    ghost.isBlue = true
+    ghost.blueCount++
+    if(ghost.blueCount === 10) {
+      clearInterval(ghost.blueInterval)
+      ghost.isBlue = false
       }
     }, 1000)
+  })
 }
 
 //Base class for creating the characters, everything within this class is shared by pacman and the ghosts
@@ -176,7 +181,7 @@ class Pacman extends Character {
         score++
         console.log(score)
       }
-      //eat the big dots and increase the score by 50 set the ghostsBlue to be true
+      //eat the big dots and increase the score by 50 set the ghost.isBlue to be true
       if(squares[this.index].classList.contains('big-dots')) {
         squares[this.index].classList.remove('big-dots')
         score += 50
@@ -190,8 +195,11 @@ class Ghost extends Character {
     super(className, classType, index)
 
     this.originalClass = className
-    this.beenReset = false
 
+    //each ghost class needs its own blue interval property
+    this.blueInterval = 0
+    this.blueCount = 0
+    this.isBlue = false
     this.options = [width, 1, -width, -1]
     this.direction = this.options[Math.floor(Math.random() * this.options.length)]
     this.move()
@@ -205,7 +213,7 @@ class Ghost extends Character {
   }
 
   turnGhostsBlue() {
-    if(ghostsBlue && !this.beenReset) {
+    if(this.isBlue) {
       this.className = 'blue'
       squares.forEach(square => square.classList.remove(this.originalClass))
     } else {
@@ -217,8 +225,8 @@ class Ghost extends Character {
   //reset the ghosts className, index, and reactivate its ability to move
   resetGhost() {
 
-    //change reset to true so that a class of blue is not applied
-    this.beenReset = true
+    //reset the ghost class to being false
+    this.isBlue = false
 
     this.className = this.originalClass
 
