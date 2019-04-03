@@ -2,6 +2,16 @@
   box-sizing: border-box;
 }
 
+.start-screen {
+  background-image: url(images/startbackground.jpg);
+  width: 600px;
+  height: 600px;
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+  background-color: black;
+}
+
 .board {
   width: 600px;
   height: 600px;
@@ -22,7 +32,9 @@
 }
 
 .big-dots {
-  background-image: url(images/big-dots.png);
+  background-image: url(images/discoball.gif);
+  background-size: contain;
+  background-repeat: no-repeat;
 }
 
 .pacman {

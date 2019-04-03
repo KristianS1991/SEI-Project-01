@@ -115,7 +115,8 @@ class Character {
     if(!gameInPlay) return false
 
     this.intervalId = setInterval(() => {
-      if(squares[this.index + this.direction].classList.contains('wall') || squares[this.index + this.direction].classList.contains('ghost') ) {
+      //"|| squares[this.index + this.direction].classList.contains('ghost')" - was in conditional below, keeping ghosts from running into eachother however, it was stopping pacman occasionally
+      if(squares[this.index + this.direction].classList.contains('wall')) {
         this.stopMove()
         return false
       }
@@ -206,6 +207,10 @@ class Ghost extends Character {
     this.isBlue = false
     this.options = [width, 1, -width, -1]
     this.direction = this.options[Math.floor(Math.random() * this.options.length)]
+
+    //Might need a this.previousDirection option
+    //this.previousDirection =
+
     this.move()
   }
 
