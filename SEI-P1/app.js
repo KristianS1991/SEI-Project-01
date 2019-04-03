@@ -22,8 +22,6 @@ const rightKey = 39
 const downKey = 40
 
 
-
-
 //refactored function creating the board
 function createBoard() {
   for(let i = 0; i < width ** 2; i++) {
@@ -43,18 +41,38 @@ function createBoard() {
 }
 
 //function to check if Pacman and the ghosts crosspaths, if so end the game
-function ghostKillPacmanCheck() {
-    ghosts.forEach(ghost => {
-      if(squares[ghost.index].classList.contains('pacman') && !ghostsBlue) {
+//change to collision check
+function collisionCheck() {
+  ghosts.forEach(ghost => {
+    if(squares[ghost.index].classList.contains('pacman') && ghost.className !== 'dead') {
+      if(!ghostsBlue) {
         //squares.forEach(index => squares[index].classList.remove('pacman'))
         clearInterval(checkLoseInterval)
         gameInPlay = false
         console.log('you lose')
+      } else {
+        // "if(ghostsBlue)" - ghosts are blue, so pacman eats ghost
+        //move blue ghosts die to here
+        ghost.className = 'dead'
+
+        clearInterval(ghost.intervalId)
+        squares[ghost.index].classList.remove('blue')
+        score+=100
+        console.log('blue ghost killed')
+
+        //reset ghosts after 5 seconds
+        setTimeout(() => {ghost.resetGhost()}, 5000)
+
+      }
     }
   })
 }
 
+//this function sets the variable ghostsBlue to true for 10 seconds
 function blueGhostInterval() {
+
+  //reset the been reset option of the ghosts to false so that they can be turned blue again
+  ghosts.forEach(ghost => ghost.beenReset = false)
   //clear the previous interval if it exists
   blueCount = 0
   clearInterval(intervalBlue)
@@ -98,9 +116,9 @@ class Character {
       squares[this.index].classList.add(this.className, this.classType)
 
       this.moveStyle()
-      this.eatDotsAndGhosts()
+      this.eatDots()
       this.turnGhostsBlue()
-      this.blueGhostsDie()
+
 
       }, 200)
 
@@ -112,9 +130,9 @@ class Character {
 
   //initialize empty functions for character dependent functions, functions defined in subclasses below
   moveStyle() {} //applies only to pacman
-  eatDotsAndGhosts() {} //applies only to pacman
+  eatDots() {} //applies only to pacman
   turnGhostsBlue() {} //applies only to ghosts
-  blueGhostsDie() {} //applies only to ghosts
+  resetGhost() {}  //applies only to ghosts
 
 }
 
@@ -151,7 +169,7 @@ class Pacman extends Character {
     squares[this.index].setAttribute('data-direction', charDirection)
   }
 
-  eatDotsAndGhosts() {
+  eatDots() {
       //eat the little dots and increase the score by 1
       if(squares[this.index].classList.contains('dots')) {
         squares[this.index].classList.remove('dots')
@@ -172,6 +190,8 @@ class Ghost extends Character {
     super(className, classType, index)
 
     this.originalClass = className
+    this.beenReset = false
+
     this.options = [width, 1, -width, -1]
     this.direction = this.options[Math.floor(Math.random() * this.options.length)]
     this.move()
@@ -185,41 +205,34 @@ class Ghost extends Character {
   }
 
   turnGhostsBlue() {
-    //console.log('original class', this.originalClass)
-    if(ghostsBlue) {
+    if(ghostsBlue && !this.beenReset) {
       this.className = 'blue'
-
-      // let originalColor = document.querySelector(this.originalClass)
-      // originalColor.classList.remove(this.originalClass)
       squares.forEach(square => square.classList.remove(this.originalClass))
-
     } else {
-
       this.className = this.originalClass
       squares.forEach(square => square.classList.remove('blue'))
-
     }
-
   }
 
-  blueGhostsDie() {
-    if(ghostsBlue && squares[this.index].classList.contains('pacman')) {
+  //reset the ghosts className, index, and reactivate its ability to move
+  resetGhost() {
 
-      this.className = 'dead'
+    //change reset to true so that a class of blue is not applied
+    this.beenReset = true
 
-      clearInterval(this.intervalId)
-      squares[this.index].classList.remove('blue')
-      score+=100
-      console.log('blue ghost killed')
+    this.className = this.originalClass
 
-      //reset ghosts - can you generate new classes in a function?
-      //use a setTimeout function which resets (this.index, this.className (to this.originalClass)
-      //after 5 seconds give or take
-    }
+    //reset the ghost to the middle of the board
+    this.index = (width * width)/2 - width/2
+    this.options = [width, 1, -width, -1]
+    this.direction = this.options[Math.floor(Math.random() * this.options.length)]
+    this.move()
+
   }
 
 
 }
+
 
 
 createBoard()
@@ -233,20 +246,10 @@ const ghosts = [
   new Ghost('red', 'ghost', 240)
 ]
 
-//set an interval on a small increment, calling the ghostKillPacmanCheck function
-let checkLoseInterval = setInterval(() => {ghostKillPacmanCheck()}, 5)
+//set an interval on a small increment, calling the collisionCheck function
+let checkLoseInterval = setInterval(collisionCheck, 5)
 
-//add blue class to the ghosts if ghostBlue is true
-// while (ghostsBlue) {
-//   console.log('hello')
-// }
 
-//remove blue class from the ghosts if ghostBlue is false
-// if(!ghostsBlue) {
-//   ghosts.forEach(ghost => {
-//     ghost.classList.remove('blue')
-//   })
-// }
 
 
 
