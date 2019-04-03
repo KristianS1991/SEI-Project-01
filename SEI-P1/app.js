@@ -220,10 +220,8 @@ class Ghost extends Character {
 
   //reset the ghosts className, index, and reactivate its ability to move
   resetGhost() {
-
-    //reset the ghost class to being false
+    //reset the ghost isBlue option to being false
     this.isBlue = false
-
     this.className = this.originalClass
 
     //reset the ghost to the middle of the board
@@ -231,7 +229,6 @@ class Ghost extends Character {
     this.options = [width, 1, -width, -1]
     this.direction = this.options[Math.floor(Math.random() * this.options.length)]
     this.move()
-
   }
 
 
