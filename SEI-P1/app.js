@@ -52,16 +52,12 @@ function collisionCheck() {
         console.log('you lose')
       } else {
         // "if(ghost.isBlue)" - ghosts are blue, so pacman eats ghost
-        //move blue ghosts die to here
         ghost.className = 'dead'
-
         clearInterval(ghost.intervalId)
-
-        //clear blue interval after collision
         clearInterval(ghost.blueInterval)
-
         squares[ghost.index].classList.remove('blue')
         score+=100
+
         console.log('blue ghost killed')
 
         //reset ghosts after 5 seconds
