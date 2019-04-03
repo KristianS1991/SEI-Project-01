@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
 //variables related to the board
-const width = 18
+const width = 20
 const board = document.querySelector('.board')
 const squares = []
 //variable for stopping/starting the game

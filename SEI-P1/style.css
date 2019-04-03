@@ -12,8 +12,8 @@
 }
 
 .board div {
-  width: calc(100%/18);
-  height: calc(100%/18);
+  width: calc(100%/20);
+  height: calc(100%/20);
   border: 1px solid;
 }
 
