@@ -2,15 +2,6 @@
   box-sizing: border-box;
 }
 
-.start-screen {
-  background-image: url(images/startbackground.jpg);
-  width: 600px;
-  height: 600px;
-  margin: auto;
-  display: flex;
-  flex-wrap: wrap;
-  background-color: black;
-}
 
 .board {
   width: 600px;
@@ -112,4 +103,14 @@
 
 .wall {
   background-color: coral;
+}
+
+.start-screen {
+  background-image: url(images/startbackground.jpg);
+  width: 600px;
+  height: 600px;
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+  background-color: black;
 }
