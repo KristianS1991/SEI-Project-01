@@ -39,6 +39,8 @@ let player
 let ghosts
 let checkLoseInterval
 
+
+
 class Character {
   constructor(className, classType, index) {
     this.className = className
@@ -177,7 +179,8 @@ class Ghost extends Character {
     this.isBlue = false
     this.options = [width, 1, -width, -1]
     this.direction = this.options[Math.floor(Math.random() * this.options.length)]
-
+    //boolean to check if the ghost has tried a move yet
+    this.onlyOption = false
     //store the current index before moving so it can be used to prevent the ghosts from moving back on themselves
     this.previousIndex = this.index
 
@@ -188,10 +191,14 @@ class Ghost extends Character {
   //what do I need to pass in? - previous index?
   // will need the previous index, the new index, and pacmans position (player.index?)
 
+
+//put a count or boolean to track if its tried something already
   moveIsValid() {
-    if (squares[this.index + this.direction].classList.contains('wall') || squares[this.index + this.direction].classList.contains('ghost') || this.index + this.direction === this.previousIndex) {
+    if (squares[this.index + this.direction].classList.contains('wall') || squares[this.index + this.direction].classList.contains('ghost') || this.index + this.direction === this.previousIndex && !this.onlyOption) {
       this.moveValid = false
-    } else {
+      this.onlyOption = true
+    }
+     else {
       this.moveValid = true
     }
   }
@@ -203,7 +210,7 @@ class Ghost extends Character {
    // does it pass if (Math.abs(this.index - newPos) > Math.abs(this.index - newPos))? preferably TRUE but if there are no other options this can be FALSE.
    // do i generate the direction in here?
 
-   
+
 
 
  }
