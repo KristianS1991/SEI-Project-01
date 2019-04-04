@@ -64,6 +64,9 @@ class Character {
 
       //this.moveIsSmart()
 
+      //instead of setting this.direction in the constructor, set it here, calling a function
+      //these need to be working together
+      //!this.moveIsSmart()
       if(!this.moveIsValid()) {
         this.stopMove()
 
@@ -166,6 +169,10 @@ class Pacman extends Character {
     }
   }
 
+  moveIsSmart() {
+    return true
+  }
+
 }
 
 
@@ -181,7 +188,9 @@ class Ghost extends Character {
     this.isBlue = false
     this.options = [width, 1, -width, -1]
     this.direction = this.options[Math.floor(Math.random() * this.options.length)]
+    /// ----------------------------^use a filter here, to check if it is the only possible move, using moveIsValid & moveIsSmart
 
+    this.onlyOption = false
     //store the current index before moving so it can be used to prevent the ghosts from moving back on themselves
     this.previousIndex = this.index
 
@@ -194,6 +203,15 @@ class Ghost extends Character {
 
 
 //put a count or boolean to track if its tried something already
+  // moveIsValid() {
+  //   if (squares[this.index + this.direction].classList.contains('wall') || this.index + this.direction === this.previousIndex) {
+  //     return false
+  //   }
+  //    else {
+  //     return true
+  //   }
+  // }
+
   moveIsValid() {
     if (squares[this.index + this.direction].classList.contains('wall') || this.index + this.direction === this.previousIndex) {
       return false
@@ -207,8 +225,39 @@ class Ghost extends Character {
  moveIsSmart() {
    // does it pass if (Math.abs(this.index - newPos) > Math.abs(this.index - newPos))? preferably TRUE but if there are no other options this can be FALSE.
    // do i generate the direction in here?
+   // if (squares[this.index + this.direction].classList.contains('wall') && this.index + this.direction === this.previousIndex) {
+   //   this.onlyOption = true
+   // }
+
+   //use a for loop? to check if a move fails all criteria - then assign this.onlyOption to true?
+   //how can i return false if it fails one criteria but true
+
+   const optionOne = Math.abs((this.index + this.direction) - player.index) < (Math.abs(this.index - player.index))
+   const optionTwo = this.options.filter((element) => squares[this.index + element].classList.contains('wall') || this.index + element === this.previousIndex).length === 1
 
 
+   // !!! use if moveIsValid -> true ,
+   if (optionTwo) {
+     console.log({ optionOne, optionTwo, goodTimes: optionOne && optionTwo })
+   }
+
+
+
+
+   if (optionOne) {
+     console.log('option 1')
+      return true
+    }
+    //in here filter this.options and see if it meets the criteria above, if none do return true
+    else if (optionTwo)
+      {
+      console.log('option 2')
+      return true
+    }
+    else {
+      console.log('option 3')
+      return false
+    }
 
 
  }
