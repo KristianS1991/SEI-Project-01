@@ -194,12 +194,15 @@ class Ghost extends Character {
 
 //put a count or boolean to track if its tried something already
   moveIsValid() {
-    if (squares[this.index + this.direction].classList.contains('wall') || squares[this.index + this.direction].classList.contains('ghost') || this.index + this.direction === this.previousIndex && !this.onlyOption) {
+    if (squares[this.index + this.direction].classList.contains('wall') || squares[this.index + this.direction].classList.contains('ghost') || this.index + this.direction === this.previousIndex)
+    //put && !onlyOption in above so they
+     {
       this.moveValid = false
-      this.onlyOption = true
+      //this.onlyOption = true
     }
      else {
       this.moveValid = true
+      //this.onlyOption = false
     }
   }
 
