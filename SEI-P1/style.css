@@ -7,7 +7,6 @@ body {
   margin: auto;
   display: flex;
   justify-content: center;
-
 }
 
 .board {
@@ -26,9 +25,8 @@ body {
 }
 
 .dots {
-  /* background-image: url(images/pacman-dots.png); */
-  background-image: url(images/pill2.gif);
-  /* background-size: contain; */
+  background-image: url(images/pacman-dots.png);
+  /* background-image: url(images/pill2.gif); */
   background-size: 18px;
   background-repeat: no-repeat;
   background-color: black;
@@ -36,7 +34,6 @@ body {
 }
 
 .fruit {
-  /* background-image: url(images/pacman-dots.png); */
   background-image: url(images/cherry.gif);
   background-size: contain;
   background-repeat: no-repeat;
@@ -195,6 +192,16 @@ footer div {
 .start-button:hover {
   box-shadow: 0 0 15px rgba(57,255,20);
   text-shadow: 0 0 15px rgba(57,255,20);
+}
+
+.score-details {
+  width: 180px;
+  height: 72px;
+}
+
+.game-details {
+  width: 210px;
+  height: 72px;
 }
 
 .banner {

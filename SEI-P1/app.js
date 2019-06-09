@@ -444,9 +444,11 @@ function init() {
   main.appendChild(footer)
 
   scoreBoard = document.createElement('div')
+  scoreBoard.classList.add('score-details')
   footer.appendChild(scoreBoard)
 
   resultDisplay = document.createElement('div')
+  resultDisplay.classList.add('game-details')
   footer.appendChild(resultDisplay)
 
   audioFile = document.createElement('audio')
