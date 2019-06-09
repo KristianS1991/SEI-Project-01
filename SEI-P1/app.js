@@ -1,6 +1,15 @@
-//variables related to the board
+//variables for the board
 const width = 20
+let main
+let body
 let board
+let homeScreen
+let banner
+let headerBanner
+let footer
+let scoreBoard
+let resultDisplay
+let startButton
 const squares = []
 const walls = [
   42, 44, 45, 46, 48, 49, 50, 51, 53, 54, 55, 57,
@@ -17,28 +26,29 @@ const walls = [
   332, 333, 342, 343, 344, 349, 350, 355, 356, 357,
   366, 367, 372, 373
 ]
+
 //variable for stopping/starting the game
 let gameInPlay = true
 let charDirection = 'right'
 let currentStep = 0
-//variables related to the blue ghosts behavior
-//let ghostsBlue = false
-//let blueCount = 0
-let intervalBlue = 0
-//variables for score dots and lives
+let checkLoseInterval
+let intervalWin = false
+let audioFile
+
+//variables for characters
+let player
+let ghosts
+
+//variables for scores
 let score = 0
-let bigDots = [63, 78, 149, 215, 301, 369, 378]
-let livesCount = 3
+const bigDots = [63, 78, 149, 215, 301, 369, 378]
+const fruit = [30, 184, 217, 251, 361]
+
 //initilize variables for each arrow key
 const leftKey = 37
 const upKey = 38
 const rightKey = 39
 const downKey = 40
-
-let player
-let ghosts
-let checkLoseInterval
-
 
 
 class Character {
@@ -46,7 +56,6 @@ class Character {
     this.className = className
     this.classType = classType
     this.index = index
-
     this.moveValid = true
 
     this.render()
@@ -61,56 +70,40 @@ class Character {
     if(!gameInPlay) return false
 
     this.intervalId = setInterval(() => {
-
-      //this.moveIsSmart()
-
-      //instead of setting this.direction in the constructor, set it here, calling a function
-      //these need to be working together
-      //!this.moveIsSmart()
-      if(!this.moveIsValid()) {
-        this.stopMove()
-
-        //does this need to be in here as well? think so...
-        //this.smartGhostDirection()
-        return false
-      }
-
-
-      squares[this.index].classList.remove(this.className, this.classType)
-
-      this.previousIndex = this.index
-
-      this.index += this.direction
-
-      squares[this.index].classList.add(this.className, this.classType)
-
-
-      this.moveStyle()
-      this.eatDots()
-      this.turnGhostsBlue()
-
-      //this.smartGhostDirection()
-
+      this.intervalCheck()
     }, 200)
-
   }
 
+  intervalCheck() {
+    if(!this.moveIsValid()) {
+      this.stopMove()
+      return false
+    }
+
+    this.updateClass()
+    this.moveStyle()
+    this.eat()
+    this.turnGhostsBlue()
+  }
+
+  updateClass() {
+    squares[this.index].classList.remove(this.className, this.classType)
+    this.previousIndex = this.index
+    this.index += this.direction
+    squares[this.index].classList.add(this.className, this.classType)
+  }
 
   stopMove() {
     clearInterval(this.intervalId)
   }
 
-
-  //initialize empty functions for character dependent functions, functions defined in subclasses below
-  moveStyle() {} //applies only to pacman
-  eatDots() {} //applies only to pacman
-  turnGhostsBlue() {} //applies only to ghosts
-  resetGhost() {}  //applies only to ghosts
-  //smartGhostDirection() {} //applies only to ghosts - does this need to come before stopMove? think so
-  moveIsValid() {} // only applies to the ghosts
-  moveIsSmart() {} // only applies to the ghosts
-
-
+  //functions below are character dependent, defined in relevant subclass
+  moveStyle() {}          //applies only to pacman
+  eat() {}                //applies only to pacman
+  turnGhostsBlue() {}     //applies only to ghosts
+  resetGhost() {}         //applies only to ghosts
+  moveIsValid() {}        //applies only to ghosts
+  moveIsSmart() {}        //applies only to ghosts
 }
 
 class Pacman extends Character {
@@ -124,17 +117,17 @@ class Pacman extends Character {
     document.addEventListener('keydown', (e) => {
       switch(e.keyCode) {
         case leftKey: this.direction = -1
-        charDirection = 'left'
-        break
+          charDirection = 'left'
+          break
         case upKey: this.direction = -width
-        charDirection = 'up'
-        break
+          charDirection = 'up'
+          break
         case rightKey: this.direction = +1
-        charDirection = 'right'
-        break
+          charDirection = 'right'
+          break
         case downKey: this.direction = +width
-        charDirection = 'down'
-        break
+          charDirection = 'down'
+          break
       }
       this.move()
     })
@@ -146,21 +139,6 @@ class Pacman extends Character {
     squares[this.index].setAttribute('data-direction', charDirection)
   }
 
-  eatDots() {
-    //eat the little dots and increase the score by 1
-    if(squares[this.index].classList.contains('dots')) {
-      squares[this.index].classList.remove('dots')
-      score++
-      //console.log(score)
-    }
-    //eat the big dots and increase the score by 50 set the ghost.isBlue to be true
-    if(squares[this.index].classList.contains('big-dots')) {
-      squares[this.index].classList.remove('big-dots')
-      score += 50
-      blueGhostInterval()
-    }
-  }
-
   moveIsValid() {
     if (squares[this.index + this.direction].classList.contains('wall')) {
       return false
@@ -169,8 +147,25 @@ class Pacman extends Character {
     }
   }
 
-  moveIsSmart() {
-    return true
+  eat() {
+    const spaceClasses = squares[this.index].classList
+    //+1 point for eating a dot
+    if(spaceClasses.contains('dots')) {
+      spaceClasses.remove('dots')
+      score++
+    }
+    //+50 points for eating fruit
+    if(spaceClasses.contains('fruit')) {
+      spaceClasses.remove('fruit')
+      score+=50
+    }
+    //+100 points for big dots and trigger the blue ghost interval
+    if(spaceClasses.contains('big-dots')) {
+      spaceClasses.remove('big-dots')
+      score += 100
+      blueGhostInterval()
+    }
+    scoreBoard.innerText = 'Score: ' + score
   }
 
 }
@@ -187,8 +182,9 @@ class Ghost extends Character {
     this.blueCount = 0
     this.isBlue = false
     this.options = [width, 1, -width, -1]
+
     this.direction = this.options[Math.floor(Math.random() * this.options.length)]
-    /// ----------------------------^use a filter here, to check if it is the only possible move, using moveIsValid & moveIsSmart
+
 
     this.onlyOption = false
     //store the current index before moving so it can be used to prevent the ghosts from moving back on themselves
@@ -197,84 +193,63 @@ class Ghost extends Character {
     this.move()
   }
 
-  //function for picking which direction for the ghosts to move in
-  //what do I need to pass in? - previous index?
-  // will need the previous index, the new index, and pacmans position (player.index?)
-
-
-//put a count or boolean to track if its tried something already
-  // moveIsValid() {
-  //   if (squares[this.index + this.direction].classList.contains('wall') || this.index + this.direction === this.previousIndex) {
-  //     return false
-  //   }
-  //    else {
-  //     return true
-  //   }
-  // }
-
   moveIsValid() {
-    if (squares[this.index + this.direction].classList.contains('wall') || this.index + this.direction === this.previousIndex) {
+
+    const possibleMoves = []
+    const smartMoves = []
+
+    if (squares[this.index + this.direction].classList.contains('wall')) {
       return false
-    }
-     else {
+    } else {
+
+      this.options.forEach((option) => {
+        if(!squares[this.index + option].classList.contains('wall')) {
+          possibleMoves.push(option)
+        }
+        //console.log(possibleMoves.length)
+      })
+
+      //up to here possibleMoves is an array of directions not containing a wall
+      possibleMoves.forEach((move) => {
+        if(this.moveIsSmart(move)) {
+          smartMoves.push(move)
+        }
+      })
+
+      if(smartMoves.length === 1) {
+        this.direction = smartMoves[0]
+      } else if (smartMoves.length === 2) {
+        this.direction = smartMoves[Math.floor(Math.random() * smartMoves.length)]
+      }
+
+      console.log(smartMoves.length)
+
       return true
     }
+
+    //Good progress -include a clauses saying they cannot go back to the previousIndex
+
+    //it can be done in here! reassign this.direction be careful of true or false and stopmove above
+
+
+
   }
 
-  // and moveIsSmart to check if it is further away or not
- moveIsSmart() {
-   // does it pass if (Math.abs(this.index - newPos) > Math.abs(this.index - newPos))? preferably TRUE but if there are no other options this can be FALSE.
-   // do i generate the direction in here?
-   // if (squares[this.index + this.direction].classList.contains('wall') && this.index + this.direction === this.previousIndex) {
-   //   this.onlyOption = true
-   // }
+  // and moveIsSmart to check if the move is further or closer to pacman
+  moveIsSmart(option) {
+    // does it pass if (Math.abs(this.index - newPos) > Math.abs(this.index - newPos))? preferably TRUE but if there are no other options this can be FALSE.
+    // do i generate the direction in here?
+    // if (squares[this.index + this.direction].classList.contains('wall') && this.index + this.direction === this.previousIndex) {
+    //   this.onlyOption = true
+    // }
 
-   //use a for loop? to check if a move fails all criteria - then assign this.onlyOption to true?
-   //how can i return false if it fails one criteria but true
+    const pacmanIndex = squares.findIndex(cell => cell.classList.contains('player'))
 
-   const optionOne = Math.abs((this.index + this.direction) - player.index) < (Math.abs(this.index - player.index))
-   const optionTwo = this.options.filter((element) => squares[this.index + element].classList.contains('wall') || this.index + element === this.previousIndex).length === 1
-
-
-   // !!! use if moveIsValid -> true ,
-   if (optionTwo) {
-     console.log({ optionOne, optionTwo, goodTimes: optionOne && optionTwo })
-   }
-
-
-
-
-   if (optionOne) {
-     console.log('option 1')
+    if(Math.abs((this.index + option) - pacmanIndex) < (Math.abs(this.index - pacmanIndex))) {
       return true
-    }
-    //in here filter this.options and see if it meets the criteria above, if none do return true
-    else if (optionTwo)
-      {
-      console.log('option 2')
-      return true
-    }
-    else {
-      console.log('option 3')
+    } else {
       return false
     }
-
-
- }
-
-//might not need the function below - the move() function picks a new direction if moveIsValid fails
-  smartGhostDirection() {
-
-    //if(this.moveValid && this.moveIsSmart) -> use this direction,
-    //else (basically this.moveValid is true) -> use this direction
-
-    // this function should reassign this.direction before it is passed into move(), maybe use a while loop that ends until all the criteria are met, then calls the move function
-    // start with generating this.direction with Math.random as before, then check the below:
-    // 1. is this.index += this.direction !== previousIndex? - must be TRUE
-    // 2. does squares[this.index += this.direction].classList.contains('wall')? - must be FALSE
-    // 3. does it pass if (Math.abs(this.index - newPos) > Math.abs(this.index - newPos))? preferably TRUE but if there are no other options this can be FALSE.
-
-    //how to check if there are any other options? for loop filtering options?
 
   }
 
@@ -318,8 +293,9 @@ class Ghost extends Character {
 
 function createBoard() {
   for(let i = 0; i < width ** 2; i++) {
-    const square = document.createElement('DIV')
-    if(i < width || i % width === 0 || i % width === width - 1 || i > width * width - width) { square.classList.add('wall')
+    const square = document.createElement('div')
+    if(i < width || i % width === 0 || i % width === width - 1 || i > width * width - width) {
+      square.classList.add('wall')
     }
     board.appendChild(square)
     squares.push(square)
@@ -328,42 +304,52 @@ function createBoard() {
     }
   }
   for (let i = 0; i < bigDots.length; i++) {
-        squares[bigDots[i]].classList.add('big-dots')
-        squares[bigDots[i]].classList.remove('dots')
-      }
+    squares[bigDots[i]].classList.add('big-dots')
+    squares[bigDots[i]].classList.remove('dots')
+  }
   for (let i = 0; i < walls.length; i++) {
     squares[walls[i]].classList.add('wall')
     squares[walls[i]].classList.remove('dots')
     squares[walls[i]].classList.remove('big-dots')
   }
-
-
+  for (let i = 0; i < fruit.length; i++) {
+    squares[fruit[i]].classList.add('fruit')
+    squares[walls[i]].classList.remove('dots')
+  }
 }
-//Base class for creating the characters, everything within this class is shared by pacman and the ghosts
+
+//the player has won if there are no small dots remaining
+function checkWin() {
+  intervalWin = true
+  for (let i = 0; i < width*width; i++) {
+    if (squares[i].classList.contains('dots')) {
+      intervalWin = false
+    }
+  }
+
+  if (intervalWin === true) {
+    resultDisplay.innerText = 'You win!'
+    gameInPlay = false
+  }
+}
 
 //function to check if Pacman and the ghosts crosspaths, if so end the game
-//change to collision check
 function collisionCheck() {
   ghosts.forEach(ghost => {
     if(squares[ghost.index].classList.contains('pacman') && ghost.className !== 'dead') {
       if(!ghost.isBlue) {
-        //squares.forEach(index => squares[index].classList.remove('pacman'))
         clearInterval(checkLoseInterval)
         gameInPlay = false
-        console.log('you lose')
+        resultDisplay.innerText = 'Sorry, you lose'
       } else {
-        // "if(ghost.isBlue)" - ghosts are blue, so pacman eats ghost
         ghost.className = 'dead'
         clearInterval(ghost.intervalId)
         clearInterval(ghost.blueInterval)
         squares[ghost.index].classList.remove('blue')
-        score+=100
-
-        console.log('blue ghost killed')
+        score+=200
 
         //reset ghosts after 5 seconds
-        setTimeout(() => {ghost.resetGhost()}, 5000)
-
+        setTimeout(() => ghost.resetGhost(), 5000)
       }
     }
   })
@@ -375,8 +361,8 @@ function blueGhostInterval() {
     //clear the previous interval if it exists
     ghost.blueCount = 0
     clearInterval(ghost.blueInterval)
-    //turn the ghosts blue when the big dots are eaten, for ten seconds
 
+    //turn the ghosts blue when the big dots are eaten, for ten seconds
     ghost.blueInterval = setInterval(() => {
       ghost.isBlue = true
       ghost.blueCount++
@@ -387,15 +373,13 @@ function blueGhostInterval() {
     }, 1000)
   })
 }
+//
+function startGame() {
 
-
-function init() {
-  //refactored function creating the board
-  board = document.querySelector('.board')
-  //this function sets the variable ghost.isBlue to true for 10 seconds
-
-
-  createBoard()
+  homeScreen.style.zIndex = '-1'
+  startButton.style.zIndex = '-1'
+  banner.style.zIndex = '-1'
+  headerBanner.style.zIndex = '-1'
 
   player = new Pacman('pacman', 'player', width + 1)
 
@@ -408,6 +392,118 @@ function init() {
 
   //set an interval on a small increment, calling the collisionCheck function
   checkLoseInterval = setInterval(collisionCheck, 5)
+  checkWinInterval = setInterval(checkWin, 1000)
+
+  //start Madonna - Into the Groove
+  audioFile.play()
+
 }
+
+// function resetGame() {
+//   score = 0
+//   player = 0
+//   ghosts = []
+//   resultDisplay.innerText = ""
+//
+//   //replace the dots -
+//
+//   // for (let i = 0; i < bigDots.length; i++) {
+//   //       squares[bigDots[i]].classList.add('big-dots')
+//   //       squares[bigDots[i]].classList.remove('dots')
+//   //     }
+//   //
+//   // for(let i = 0; i < width ** 2; i++) {
+//   //   if(!(i < width || i % width === 0 || i % width === width - 1 || i > width * width - width)) {
+//   //     square.classList.remove('dots')
+//   //   }
+//   // }
+//   //
+//   // for(let i = 0; i < width ** 2; i++) {
+//   //   if(!(i < width || i % width === 0 || i % width === width - 1 || i > width * width - width)) {
+//   //     square.classList.add('dots')
+//   //   }
+//   // }
+//
+//   player = new Pacman('pacman', 'player', width + 1)
+//
+//   ghosts = [
+//     new Ghost('pink', 'ghost', 105),
+//     new Ghost('green', 'ghost', 36),
+//     new Ghost('orange', 'ghost', 325),
+//     new Ghost('red', 'ghost', 274)
+//   ]
+//
+//   //set an interval on a small increment, calling the collisionCheck function
+//   checkLoseInterval = setInterval(collisionCheck, 5)
+//
+//
+// }
+
+
+
+
+function init() {
+  //refactored function creating the board
+  body = document.querySelector('body')
+
+  homeScreen = document.createElement('div')
+  homeScreen.classList.add('home-screen')
+  body.appendChild(homeScreen)
+
+  startButton = document.createElement('div')
+  startButton.classList.add('start-button')
+  body.appendChild(startButton)
+  startButton.innerText = 'Start Game'
+
+  banner = document.createElement('div')
+  banner.classList.add('banner')
+  body.appendChild(banner)
+  banner.innerText = 'A Night out in Malibu!'
+
+  headerBanner = document.createElement('div')
+  headerBanner.classList.add('headerBanner')
+  body.appendChild(headerBanner)
+
+  startButton.addEventListener('click', startGame)
+
+  board = document.createElement('div')
+  board.classList.add('board', 'bg-image')
+  body.appendChild(board)
+
+  footer = document.createElement('footer')
+  main = document.querySelector('html')
+  main.appendChild(footer)
+
+  scoreBoard = document.createElement('div')
+  footer.appendChild(scoreBoard)
+
+  resultDisplay = document.createElement('div')
+  footer.appendChild(resultDisplay)
+
+  audioFile = document.createElement('audio')
+  audioFile.src = 'music/Madonna-IntotheGroove.mp3'
+  footer.appendChild(audioFile)
+
+
+  // resetButton = document.createElement('div')
+  // resetButton.classList.add('reset')
+  // footer.appendChild(resetButton)
+
+  //resetButton.addEventListener('click', resetGame)
+
+  scoreBoard.innerText = 'Score: 0'
+  resultDisplay.innerText = 'Good luck!'
+  //resetButton.innerText = "Reset"
+  createBoard()
+
+
+  // // create a div z-index 2 over top of cover, that says click here to start game, and put player and ghosts below in a function that creates them when you click that div, addEventListener obvi, within event listener cue music
+  //
+  //
+  // //set an interval on a small increment, calling the collisionCheck function
+  // checkLoseInterval = setInterval(collisionCheck, 5)
+
+}
+
 
 document.addEventListener('DOMContentLoaded', init)
