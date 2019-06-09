@@ -189,21 +189,16 @@ class Ghost extends Character {
   moveIsValid() {
     let possibleMoves = []
     let smartMoves = []
-    let towardMoves = []
 
     if(squares[this.index + this.direction].classList.contains('wall')) {
       return false
     } else {
       //filter out moves where there is a wall
       possibleMoves = this.options.filter((option) => {
-        return !squares[this.index + option].classList.contains('wall')
+        return !squares[this.index + option].classList.contains('wall') && this.index + option !== this.previousIndex
       })
 
-      towardMoves = possibleMoves.filter((move) => {
-        return this.index + move !== this.previousIndex
-      })
-
-      smartMoves = towardMoves.filter((move) => {
+      smartMoves = possibleMoves.filter((move) => {
         return this.moveIsCloser(move)
       })
 
@@ -212,34 +207,27 @@ class Ghost extends Character {
       } else if (smartMoves.length === 2) {
         this.direction = smartMoves[Math.floor(Math.random() * smartMoves.length)]
       }
-      // console.log(smartMoves.length)
 
       return true
     }
-
-    //Good progress -include a clauses saying they cannot go back to the previousIndex
-
-    //it can be done in here! reassign this.direction be careful of true or false and stopmove above
-
-    // if (squares[this.index + this.direction].classList.contains('wall') && this.index + this.direction === this.previousIndex) {
-    //   this.onlyOption = true
-    // }
-
-
-
   }
 
-  // and moveIsSmart to check if the move is further or closer to pacman
+  //check if the move is further away or closer to pacman
   moveIsCloser(option) {
-    // does it pass if (Math.abs(this.index - newPos) > Math.abs(this.index - newPos))? preferably TRUE but if there are no other options this can be FALSE.
-
     const pacmanIndex = squares.findIndex(cell => cell.classList.contains('player'))
 
-    if(Math.abs((this.index + option) - pacmanIndex) < (Math.abs(this.index - pacmanIndex))) {
+    if(!this.isBlue && Math.abs((this.index + option) - pacmanIndex) < (Math.abs(this.index - pacmanIndex))) {
+      return true
+    } else if (this.isBlue && Math.abs((this.index + option) - pacmanIndex) > (Math.abs(this.index - pacmanIndex))){
       return true
     } else {
       return false
     }
+    // if(Math.abs((this.index + option) - pacmanIndex) < (Math.abs(this.index - pacmanIndex))) {
+    //   return true
+    // } else {
+    //   return false
+    // }
 
   }
 
