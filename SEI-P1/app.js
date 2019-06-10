@@ -173,19 +173,18 @@ class Ghost extends Character {
     super(className, classType, index)
 
     this.originalClass = className
+    this.previousIndex = this.index
+    this.options = [width, 1, -width, -1]
+    this.direction = this.options[Math.floor(Math.random() * this.options.length)]
+
     this.blueInterval = 0
     this.blueCount = 0
     this.isBlue = false
-    this.options = [width, 1, -width, -1]
-    this.direction = this.options[Math.floor(Math.random() * this.options.length)]
-    this.onlyOption = false
-    //store previous index to prevent ghosts from going back on themselves
-    this.previousIndex = this.index
 
     this.move()
   }
 
-  //refactor the below, also update so that the ghosts follow and run away
+  //check the move is valid and reassign the direction to follow pacman
   moveIsValid() {
     let possibleMoves = []
     let smartMoves = []
@@ -193,42 +192,38 @@ class Ghost extends Character {
     if(squares[this.index + this.direction].classList.contains('wall')) {
       return false
     } else {
-      //filter out moves where there is a wall
-      possibleMoves = this.options.filter((option) => {
-        return !squares[this.index + option].classList.contains('wall') && this.index + option !== this.previousIndex
-      })
-
-      smartMoves = possibleMoves.filter((move) => {
-        return this.moveIsCloser(move)
-      })
-
-      if(smartMoves.length === 1) {
-        this.direction = smartMoves[0]
-      } else if (smartMoves.length === 2) {
-        this.direction = smartMoves[Math.floor(Math.random() * smartMoves.length)]
-      }
-
+      possibleMoves = this.options.filter(option => this.possMoves(option))
+      smartMoves = possibleMoves.filter(move => this.moveIsCloser(move))
+      this.assignDirection(smartMoves)
       return true
     }
+  }
+
+  //filter out previous direction and moves where there is a wall
+  possMoves(option) {
+    return !squares[this.index + option].classList.contains('wall') && this.index + option !== this.previousIndex
   }
 
   //check if the move is further away or closer to pacman
   moveIsCloser(option) {
     const pacmanIndex = squares.findIndex(cell => cell.classList.contains('player'))
-
+    //if the ghosts are not blue, move closer to pacman
     if(!this.isBlue && Math.abs((this.index + option) - pacmanIndex) < (Math.abs(this.index - pacmanIndex))) {
       return true
+    //if the ghosts are blue, move further away from pacman
     } else if (this.isBlue && Math.abs((this.index + option) - pacmanIndex) > (Math.abs(this.index - pacmanIndex))){
       return true
     } else {
       return false
     }
-    // if(Math.abs((this.index + option) - pacmanIndex) < (Math.abs(this.index - pacmanIndex))) {
-    //   return true
-    // } else {
-    //   return false
-    // }
+  }
 
+  assignDirection(moves){
+    if(moves.length === 1) {
+      this.direction = moves[0]
+    } else if (moves.length === 2) {
+      this.direction = moves[Math.floor(Math.random() * moves.length)]
+    }
   }
 
   stopMove() {
@@ -260,8 +255,6 @@ class Ghost extends Character {
     this.direction = this.options[Math.floor(Math.random() * this.options.length)]
     this.move()
   }
-
-
 }
 
 function createBoard() {
