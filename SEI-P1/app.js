@@ -54,7 +54,6 @@ class Character {
     this.className = className
     this.classType = classType
     this.index = index
-    this.moveValid = true
 
     this.render()
   }
@@ -105,7 +104,6 @@ class Character {
 }
 
 class Pacman extends Character {
-
   constructor(className, classType, index) {
     super(className, classType, index)
     this.addEventListeners()
