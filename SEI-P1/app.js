@@ -216,6 +216,7 @@ class Ghost extends Character {
       return false
     }
   }
+  
   //if two potential moves are closer, pick one at random rather than the quickest
   //'else' - do nothing, no possible closer move
   assignDirection(moves){
