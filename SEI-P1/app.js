@@ -27,11 +27,12 @@ const walls = [
   366, 367, 372, 373
 ]
 
-//variable for stopping/starting the game
+//variables for stopping/starting the game
 let gameInPlay = true
 let charDirection = 'right'
 let currentStep = 0
 let checkLoseInterval
+
 // let checkWinInterval
 let intervalWin = false
 let audioFile
@@ -215,7 +216,7 @@ class Ghost extends Character {
       return false
     }
   }
-
+  //if two potential moves are closer, pick one at random rather than the quickest
   assignDirection(moves){
     if(moves.length === 1) {
       this.direction = moves[0]
@@ -226,7 +227,6 @@ class Ghost extends Character {
 
   stopMove() {
     clearInterval(this.intervalId)
-    //might not need the below?
     this.direction = this.options[Math.floor(Math.random() * this.options.length)]
     this.move()
   }
@@ -246,7 +246,6 @@ class Ghost extends Character {
     //reset the ghost isBlue option to being false
     this.isBlue = false
     this.className = this.originalClass
-
     //reset the ghost to the middle of the board
     this.index = (width * width)/2 - width/2
     this.options = [width, 1, -width, -1]
@@ -255,7 +254,7 @@ class Ghost extends Character {
   }
 }
 
-function createBoard() {
+function createWalls() {
   for(let i = 0; i < width ** 2; i++) {
     const square = document.createElement('div')
     if(i < width || i % width === 0 || i % width === width - 1 || i > width * width - width) {
@@ -267,6 +266,9 @@ function createBoard() {
       square.classList.add('dots')
     }
   }
+}
+
+function createDots() {
   for (let i = 0; i < bigDots.length; i++) {
     squares[bigDots[i]].classList.add('big-dots')
     squares[bigDots[i]].classList.remove('dots')
@@ -301,32 +303,40 @@ function collisionCheck() {
   ghosts.forEach(ghost => {
     if(squares[ghost.index].classList.contains('pacman') && ghost.className !== 'dead') {
       if(!ghost.isBlue) {
-        clearInterval(checkLoseInterval)
-        gameInPlay = false
-        resultDisplay.innerText = 'Sorry, you lose'
+        deadPlayer()
       } else {
-        ghost.className = 'dead'
-        clearInterval(ghost.intervalId)
-        clearInterval(ghost.blueInterval)
-        squares[ghost.index].classList.remove('blue')
-        score+=200
-
-        //reset ghosts after 5 seconds
-        setTimeout(() => ghost.resetGhost(), 5000)
+        deadGhost(ghost)
       }
     }
   })
 }
 
-function blueGhostInterval() {
+function deadPlayer() {
+  clearInterval(checkLoseInterval)
+  gameInPlay = false
+  resultDisplay.innerText = 'Sorry, you lose'
+}
 
+function deadGhost(ghost) {
+  ghost.className = 'dead'
+  clearInterval(ghost.intervalId)
+  clearInterval(ghost.blueInterval)
+  squares[ghost.index].classList.remove('blue')
+  score+=200
+  //reset ghosts after 5 seconds
+  setTimeout(() => ghost.resetGhost(), 5000)
+}
+
+function blueGhostInterval() {
   ghosts.forEach(ghost => {
     //clear the previous interval if it exists
     ghost.blueCount = 0
     clearInterval(ghost.blueInterval)
     //turn the ghosts blue when the big dots are eaten, for ten seconds
-    ghost.blueInterval = setInterval(() => {
+    setTimeout(() => {
       ghost.isBlue = true
+    }, 100)
+    ghost.blueInterval = setInterval(() => {
       ghost.blueCount++
       if(ghost.blueCount === 10) {
         clearInterval(ghost.blueInterval)
@@ -457,7 +467,9 @@ function init() {
   resultDisplay.innerText = 'Good luck!'
   //resetButton.innerText = "Reset"
 
-  createBoard()
+  // createBoard()
+  createWalls()
+  createDots()
 }
 
 
