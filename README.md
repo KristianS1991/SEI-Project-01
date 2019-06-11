@@ -1,2 +1,2 @@
-# SEI---Project-One-v2
+# SEI-Project-1
 Ms Pac Man
