@@ -217,6 +217,7 @@ class Ghost extends Character {
     }
   }
   //if two potential moves are closer, pick one at random rather than the quickest
+  //'else' - do nothing, no possible closer move
   assignDirection(moves){
     if(moves.length === 1) {
       this.direction = moves[0]
@@ -298,7 +299,7 @@ function checkWin() {
   }
 }
 
-//function to check if Pacman and the ghost crosspaths, if so end the game
+//function to check if Pacman and a ghost crosspaths, if so end the game
 function collisionCheck() {
   ghosts.forEach(ghost => {
     if(squares[ghost.index].classList.contains('pacman') && ghost.className !== 'dead') {
