@@ -298,7 +298,7 @@ function checkWin() {
   }
 }
 
-//function to check if Pacman and the ghosts crosspaths, if so end the game
+//function to check if Pacman and the ghost crosspaths, if so end the game
 function collisionCheck() {
   ghosts.forEach(ghost => {
     if(squares[ghost.index].classList.contains('pacman') && ghost.className !== 'dead') {
