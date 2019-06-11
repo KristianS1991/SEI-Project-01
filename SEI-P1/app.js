@@ -329,21 +329,29 @@ function deadGhost(ghost) {
 
 function blueGhostInterval() {
   ghosts.forEach(ghost => {
-    //clear the previous interval if it exists
-    ghost.blueCount = 0
-    clearInterval(ghost.blueInterval)
-    //turn the ghosts blue when the big dots are eaten, for ten seconds
-    setTimeout(() => {
-      ghost.isBlue = true
-    }, 100)
+    prepBlueInterval(ghost)
+    //turn the ghosts blue for ten seconds
     ghost.blueInterval = setInterval(() => {
-      ghost.blueCount++
-      if(ghost.blueCount === 10) {
-        clearInterval(ghost.blueInterval)
-        ghost.isBlue = false
-      }
+      blueCountCheck(ghost)
     }, 1000)
   })
+}
+
+//clear the previous interval if it exists, and turn ghosts blue
+function prepBlueInterval(ghost) {
+  ghost.blueCount = 0
+  clearInterval(ghost.blueInterval)
+  setTimeout(() => {
+    ghost.isBlue = true
+  }, 100)
+}
+
+function blueCountCheck(ghost) {
+  ghost.blueCount++
+  if(ghost.blueCount === 10) {
+    clearInterval(ghost.blueInterval)
+    ghost.isBlue = false
+  }
 }
 
 function startGame() {
