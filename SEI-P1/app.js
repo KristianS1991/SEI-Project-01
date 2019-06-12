@@ -216,7 +216,7 @@ class Ghost extends Character {
       return false
     }
   }
-  
+
   //if two potential moves are closer, pick one at random rather than the quickest
   //'else' - do nothing, no possible closer move
   assignDirection(moves){
@@ -256,7 +256,8 @@ class Ghost extends Character {
   }
 }
 
-function createWalls() {
+function createBoard() {
+  //generate walls along the perimeter and fill the interior with dots
   for(let i = 0; i < width ** 2; i++) {
     const square = document.createElement('div')
     if(i < width || i % width === 0 || i % width === width - 1 || i > width * width - width) {
@@ -268,18 +269,18 @@ function createWalls() {
       square.classList.add('dots')
     }
   }
-}
-
-function createDots() {
+  //add the big dots
   for (let i = 0; i < bigDots.length; i++) {
     squares[bigDots[i]].classList.add('big-dots')
     squares[bigDots[i]].classList.remove('dots')
   }
+  //add the maze walls
   for (let i = 0; i < walls.length; i++) {
     squares[walls[i]].classList.add('wall')
     squares[walls[i]].classList.remove('dots')
     squares[walls[i]].classList.remove('big-dots')
   }
+  //add the fruit
   for (let i = 0; i < fruit.length; i++) {
     squares[fruit[i]].classList.add('fruit')
     squares[walls[i]].classList.remove('dots')
@@ -477,9 +478,7 @@ function init() {
   resultDisplay.innerText = 'Good luck!'
   //resetButton.innerText = "Reset"
 
-  // createBoard()
-  createWalls()
-  createDots()
+  createBoard()
 }
 
 
