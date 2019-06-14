@@ -35,8 +35,10 @@ At first, I built the characters using only functions to describe how they moved
 #### Character Base Class
 The character base class contains all the functionality that Ms Pac-Man and the ghosts have in common, ie. general movement. The characters are all moving on set intervals. When the interval is triggered, the character moves in that direction until the next move is invalid.
 
+
 #### Pacman Class
 The Pacman class is a subclass of the Character class. It contains all the functionality that differentiates Ms PacMan's behaviour from the ghosts behaviour. The main distinction being that Ms Pac-Man is controlled by the user. Therefore, I added event listeners to the arrow keys to control the movement. Each arrow key triggers a new interval in that direction and clears the previous interval. Ms Pac-Man is also the only character who eats things off the board and accumulates points. I have included a function to account for each case of eating an item, adjusting the score accordingly.
+
 
 #### Ghost Class
 ##### Default Ghost Behaviour
