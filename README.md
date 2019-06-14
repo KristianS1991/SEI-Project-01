@@ -17,7 +17,7 @@
 
 ###Game Overview
 *Ms Pac-Man, A Night Out in Malibu* is a rendition of the classic arcade game *Ms Pac-Man*,
-that I created using JavaScript, HTML, and CSS. The aim of the game is to clear the nightclub of all the dots and disco balls while avoiding getting eaten by the ghosts. The ghosts are constantly in pursuit of Ms Pac-Man until she eats a disco ball, which then turns the ghosts blue for a short period of time and allows Ms Pac-Man to eat them. The ghosts will regenerate in the center of the board briefly after being eaten by Ms Pac-Man. If Ms Pac-Man touches a ghost while they are not blue, the game is over.
+that I created using JavaScript, HTML, and CSS. The aim of the game is to clear the nightclub of all the dots and disco balls while avoiding getting eaten by the ghosts. The ghosts are constantly in pursuit of Ms Pac-Man until she eats a disco ball, which then turns the ghosts blue for a short period of time and allows Ms Pac-Man to eat them. The ghosts will regenerate in the centre of the board briefly after being eaten by Ms Pac-Man. If Ms Pac-Man touches a ghost while they are not blue, the game is over.
 
 ###Controls
 * Move Ms Pac-Man: ← ↑ → ↓ keys
@@ -36,6 +36,31 @@ At first, I built the characters using only functions to describe how they moved
 The character base class contains all the functionality that Ms Pac-Man and the ghosts have in common, ie. general movement. The characters are all moving on set intervals. When the interval is triggered, the character moves in that direction until the next move is invalid.
 
 ####Pacman Class
-
+The Pacman class is a subclass of the Character class. It contains all the functionality that differentiates Ms PacMan's behaviour from the ghosts behaviour. The main distinction being that Ms Pac-Man is controlled by the user. Therefore, I added event listeners to the arrow keys to control the movement. Each arrow key triggers a new interval in that direction and clears the previous interval. Ms Pac-Man is also the only character who eats things off the board and accumulates points. I have included a function to account for each case of eating an item, adjusting the score accordingly.
 
 ####Ghost Class
+#####Default Ghost Behaviour
+The Ghost class is a subclass of the Character class. This class describes the automated behaviour
+for all the ghosts on the board. An interval is set to start moving the ghosts as soon as they have rendered. This process begins by selecting a direction at random (up, down, left, or right) and then passing that direction through a series of functions to determine whether or not that move is intelligent or the only possible move. If that direction is found to not be the best move or the only option, that direction is filtered out of the array of options and a new direction is selected from the array until the criteria have been satisfied. That direction is then reassigned as the new direction for the ghost to move in, and a new interval in that direction is set and only cleared once the ghost runs into a wall. The below list summarizes the criteria that the ghost's new move must meet:
+        1. There must not be a wall in that space.
+        2. The ghosts cannot go back to a previous index.
+        3. The move must be closer to Ms Pac-Man. (further if the ghosts are blue)
+                        OR
+        4. There are no possible moves to get closer to Ms Pac-Man.
+
+Criteria 1 and 2 must always be satisfied, and either criteria 3 or criteria 4 must be met for the move to be executed. Due to the configuration of the maze, there is not always an option for the the ghost to get closer to Ms. Pac-Man. In this case, the ghost must move in that direction until the interval is cleared (the ghost hits a wall) and a new direction is selected.
+
+#####Blue Ghost Behaviour
+If Ms. Pac-Man eats a disco ball, an interval is triggered where all the ghosts turn blue for ten seconds. If the ghosts are blue, again criteria 1 and 2 still must be satisfied. However, criteria 3 and 4 become the opposite, as the ghosts are now trying to flee from Ms. Pac-Man. If Ms. Pac-Man eats a blue ghost, the ghost disappears and the reset ghost function is invoked, which will reset a default ghost after five seconds in the middle of the board.
+
+##Challenges
+The biggest challenge of this project had to be writing the functionality to make the ghosts follow (or flee) Ms. Pac-Man. Pseudo-coding the logic seemed straight-forward: find Ms. Pac-Man's current index, check whether the new index of the ghost is closer or not, then assign or eliminate this option, looping through the array of options until the best move was found. Actually putting this into practice proved to be another story.
+
+The logic would seemingly have to be a part of the Ghost subclass, as it is unique to the ghost characters. However, the general move functionality was shared by all characters and therefore a part of the base Character class, so at first it was difficult to see where the actual logic would be implemented. I realized that the function for checking if the move is valid (moveIsValid), was invoked in the base class, but written differently in each subclass. Therefore, I could write the logic to check that the move followed Ms. Pac-Man within the Ghost subclass "moveIsValid" function.
+
+Having determined where this logic would go, the next step was to write it. This turned out to be an iterative trial-and-error process, implementing a series of filters to narrow down all the options into an array of possible moves, and then an array of smart moves, if they existed. Once a filtered array of one or two moves that could get the ghost closer to Ms. Pac-Man was established, either the one move, or one of the two moves chosen at random, was then reassigned as the ghost's new direction. If there were no smart moves, (the 'else' case), the function was to do nothing and the original move was kept as the new direction.
+
+##Separation Of Concerns
+
+##Future Add-ons
+There were two main extra features I would have liked to add to this project. Due to timing constraints, I did not get the opportunity to add these features. The first feature I would like to add to this project is a reset button. I would add an event listener to this button, so that upon clicking, the board would re-render with all of the original items and characters, and reset the score. Another feature I would like to add would be a difficulty setting for the user to select. This would change the logic applied to the ghosts following Ms. Pac-Man. The 'easy' setting would be the original logic I have in place now, where if there are two moves the ghosts can make to get closer to Ms. Pac-Man, the move is selected at random. In this case, the ghosts aren't always taking the fastest route possible, making it a bit easier for the user. In the 'hard' setting, the logic would slightly change. If there were two possible closer moves the ghosts can make, it would compare the two moves and select the one that gets the ghost even closer. This would increase the ghosts chasing efficiency and make it more difficult for the user. An alternative, simpler, method for difficulty settings would be to shorten the interval that the ghosts move on, increasing or decreasing their speed accordingly.

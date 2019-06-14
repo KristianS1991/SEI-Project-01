@@ -218,7 +218,7 @@ class Ghost extends Character {
   }
 
   //if two potential moves are closer, pick one at random rather than the quickest
-  //'else' - do nothing, no possible closer move
+  //'else' - do nothing, no possible closer move, no change to this.direction
   assignDirection(moves){
     if(moves.length === 1) {
       this.direction = moves[0]
