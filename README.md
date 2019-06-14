@@ -23,25 +23,25 @@ that I created using JavaScript, HTML, and CSS. The aim of the game is to clear 
 * Move Ms Pac-Man:  ←  ↑  →  ↓  keys
 
 ## Process
-### Creating the Board
+## Creating the Board
 The starting point for this game was creating a grid on which to build a maze that the characters would navigate. I decided on a board with dimensions of 20 x 20, so a total of 400 square shaped divs. Building the board consisted of looping over multiple arrays and assigning a class of 'wall', 'dots', 'big-dots', or 'fruit', depending on each index's purpose.
 
-### Creating the Characters
+## Creating the Characters
 At first, I built the characters using only functions to describe how they moved and responded to collisions. The game was functional, however, I noticed I was repeating a lot of code and it was proving difficult to add new characters. After some research online, I learned that I could take a more scalable approach by implementing classes to describe the characters behaviour. I created three different classes to make up the functionality of the characters:
 1. A **Character** base class
 2. A **Pacman** subclass of the **Character** base class
 3. A **Ghost** subclass of the **Character** base class
 
-#### Character Base Class
+### Character Base Class
 The character base class contains all the functionality that Ms Pac-Man and the ghosts have in common, ie. general movement. The characters are all moving on set intervals. When the interval is triggered, the character moves in that direction until the next move is invalid.
 
 
-#### Pacman Class
+### Pacman Subclass
 The Pacman class is a subclass of the Character class. It contains all the functionality that differentiates Ms PacMan's behaviour from the ghosts behaviour. The main distinction being that Ms Pac-Man is controlled by the user. Therefore, I added event listeners to the arrow keys to control the movement. Each arrow key triggers a new interval in that direction and clears the previous interval. Ms Pac-Man is also the only character who eats things off the board and accumulates points. I have included a function to account for each case of eating an item, adjusting the score accordingly.
 
 
-#### Ghost Class
-##### Default Ghost Behaviour
+### Ghost Subclass
+#### Default Ghost Behaviour
 The Ghost class is a subclass of the Character class. This class describes the automated behaviour
 for all the ghosts on the board. An interval is set to start moving the ghosts as soon as they have rendered. This process begins by selecting a direction at random (up, down, left, or right) and then passing that direction through a series of functions to determine whether or not that move is intelligent or the only possible move. If that direction is found to not be the best move or the only option, that direction is filtered out of the array of options and a new direction is selected from the array until the criteria have been satisfied. That direction is then reassigned as the new direction for the ghost to move in, and a new interval in that direction is set and only cleared once the ghost runs into a wall. The below list summarizes the criteria that the ghost's new move must meet:
 1. There must not be a wall in that space.
@@ -52,7 +52,7 @@ for all the ghosts on the board. An interval is set to start moving the ghosts a
 
 Criteria 1 and 2 must always be satisfied, and either criteria 3 or criteria 4 must be met for the move to be executed. Due to the configuration of the maze, there is not always an option for the the ghost to get closer to Ms. Pac-Man. In this case, the ghost must move in that direction until the interval is cleared (the ghost hits a wall) and a new direction is selected.
 
-##### Blue Ghost Behaviour
+#### Blue Ghost Behaviour
 If Ms. Pac-Man eats a disco ball, an interval is triggered where all the ghosts turn blue for ten seconds. If the ghosts are blue, again criteria 1 and 2 still must be satisfied. However, criteria 3 and 4 become the opposite, as the ghosts are now trying to flee from Ms. Pac-Man. If Ms. Pac-Man eats a blue ghost, the ghost disappears and the reset ghost function is invoked, which will reset a default ghost after five seconds in the middle of the board.
 
 ## Challenges
