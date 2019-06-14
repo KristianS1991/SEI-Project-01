@@ -22,7 +22,6 @@ that I created using JavaScript, HTML, and CSS. The aim of the game is to clear 
 ### Controls
 * Move Ms Pac-Man:  ←  ↑  →  ↓  keys
 
-## Process
 ## Creating the Board
 The starting point for this game was creating a grid on which to build a maze that the characters would navigate. I decided on a board with dimensions of 20 x 20, so a total of 400 square shaped divs. Building the board consisted of looping over multiple arrays and assigning a class of 'wall', 'dots', 'big-dots', or 'fruit', depending on each index's purpose.
 
