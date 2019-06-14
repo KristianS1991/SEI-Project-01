@@ -20,7 +20,7 @@
 that I created using JavaScript, HTML, and CSS. The aim of the game is to clear the nightclub of all the dots and disco balls while avoiding getting eaten by the ghosts. The ghosts are constantly in pursuit of Ms Pac-Man until she eats a disco ball, which then turns the ghosts blue for a short period of time and allows Ms Pac-Man to eat them. The ghosts will regenerate in the centre of the board briefly after being eaten by Ms Pac-Man. If Ms Pac-Man touches a ghost while they are not blue, the game is over.
 
 ### Controls
-* Move Ms Pac-Man: ← ↑ → ↓ keys
+* Move Ms Pac-Man:  ←  ↑  →  ↓  keys
 
 ## Process
 ### Creating the Board
@@ -28,9 +28,9 @@ The starting point for this game was creating a grid on which to build a maze th
 
 ### Creating the Characters
 At first, I built the characters using only functions to describe how they moved and responded to collisions. The game was functional, however, I noticed I was repeating a lot of code and it was proving difficult to add new characters. After some research online, I learned that I could take a more scalable approach by implementing classes to describe the characters behaviour. I created three different classes to make up the functionality of the characters:
-        1. A **Character** base class
-        2. A **Pacman** subclass of the **Character** base class
-        3. A **Ghost** subclass of the **Character** base class
+1. A **Character** base class
+2. A **Pacman** subclass of the **Character** base class
+3. A **Ghost** subclass of the **Character** base class
 
 #### Character Base Class
 The character base class contains all the functionality that Ms Pac-Man and the ghosts have in common, ie. general movement. The characters are all moving on set intervals. When the interval is triggered, the character moves in that direction until the next move is invalid.
@@ -44,11 +44,11 @@ The Pacman class is a subclass of the Character class. It contains all the funct
 ##### Default Ghost Behaviour
 The Ghost class is a subclass of the Character class. This class describes the automated behaviour
 for all the ghosts on the board. An interval is set to start moving the ghosts as soon as they have rendered. This process begins by selecting a direction at random (up, down, left, or right) and then passing that direction through a series of functions to determine whether or not that move is intelligent or the only possible move. If that direction is found to not be the best move or the only option, that direction is filtered out of the array of options and a new direction is selected from the array until the criteria have been satisfied. That direction is then reassigned as the new direction for the ghost to move in, and a new interval in that direction is set and only cleared once the ghost runs into a wall. The below list summarizes the criteria that the ghost's new move must meet:
-        1. There must not be a wall in that space.
-        2. The ghosts cannot go back to a previous index.
-        3. The move must be closer to Ms Pac-Man. (further if the ghosts are blue)
-                        OR
-        4. There are no possible moves to get closer to Ms Pac-Man.
+1. There must not be a wall in that space.
+2. The ghosts cannot go back to a previous index.
+3. The move must be closer to Ms Pac-Man. (further if the ghosts are blue)
+          OR
+4. There are no possible moves to get closer to Ms Pac-Man.
 
 Criteria 1 and 2 must always be satisfied, and either criteria 3 or criteria 4 must be met for the move to be executed. Due to the configuration of the maze, there is not always an option for the the ghost to get closer to Ms. Pac-Man. In this case, the ghost must move in that direction until the interval is cleared (the ghost hits a wall) and a new direction is selected.
 
