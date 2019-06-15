@@ -50,6 +50,7 @@ for all the ghosts on the board. An interval is set to start moving the ghosts a
 4. There are no possible moves to get closer to Ms Pac-Man.
 
 Criteria 1 and 2 must always be satisfied, and either criteria 3 or criteria 4 must be met for the move to be executed. Due to the configuration of the maze, there is not always an option for the the ghost to get closer to Ms. Pac-Man. In this case, the ghost must move in that direction until the interval is cleared (the ghost hits a wall) and a new direction is selected.
+![](images/chase.gif)
 
 #### Blue Ghost Behaviour
 If Ms. Pac-Man eats a disco ball, an interval is triggered where all the ghosts turn blue for ten seconds. If the ghosts are blue, again criteria 1 and 2 still must be satisfied. However, criteria 3 and 4 become the opposite, as the ghosts are now trying to flee from Ms. Pac-Man. If Ms. Pac-Man eats a blue ghost, the ghost disappears and the reset ghost function is invoked, which will reset a default ghost after five seconds in the middle of the board.

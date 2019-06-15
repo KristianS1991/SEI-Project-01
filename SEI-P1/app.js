@@ -115,7 +115,7 @@ function startGame() {
   checkWinInterval = setInterval(checkWin, 1000)
 
   //start Madonna - Into the Groove
-  audioFile.play()
+  // audioFile.play()
 }
 
 
