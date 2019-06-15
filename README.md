@@ -14,6 +14,7 @@
 2. Open the index.html page in the browser of your choice.
 
 ## The Game - Ms Pac-Man, A Night Out in Malibu
+![Ms PacMan Banner](https://i.imgur.com/MCKFfRh.png)
 
 ### Game Overview
 *Ms Pac-Man, A Night Out in Malibu* is a rendition of the classic arcade game *Ms Pac-Man*,
