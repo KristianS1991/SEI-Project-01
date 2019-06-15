@@ -110,7 +110,6 @@ function startGame() {
     new Ghost('red', 'ghost', 274)
   ]
 
-  //set an interval on a small increment, calling the collisionCheck function
   checkLoseInterval = setInterval(collisionCheck, 5)
   checkWinInterval = setInterval(checkWin, 1000)
 
