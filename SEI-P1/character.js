@@ -1,16 +1,14 @@
 class Character {
-  constructor(className, classType, index, squares) {
-    this.squares = squares
+  constructor(className, classType, index) {
     this.className = className
     this.classType = classType
     this.index = index
-    this.moveValid = true
 
     this.render()
   }
 
   render() {
-    this.squares[this.index].classList.add(this.className, this.classType)
+    squares[this.index].classList.add(this.className, this.classType)
   }
 
   move() {
@@ -35,10 +33,10 @@ class Character {
   }
 
   updateClass() {
-    this.squares[this.index].classList.remove(this.className, this.classType)
+    squares[this.index].classList.remove(this.className, this.classType)
     this.previousIndex = this.index
     this.index += this.direction
-    this.squares[this.index].classList.add(this.className, this.classType)
+    squares[this.index].classList.add(this.className, this.classType)
   }
 
   stopMove() {
