@@ -19,7 +19,7 @@
 ![Ms PacMan Banner](https://i.imgur.com/PtNL3yw.png)
 
 ### Game Overview
-*Ms Pac-Man, A Night Out in Malibu* is a rendition of the classic arcade game *Ms Pac-Man*,
+***Ms Pac-Man, A Night Out in Malibu*** is a rendition of the classic arcade game *Ms Pac-Man*,
 that I created using JavaScript, HTML, and CSS. The aim of the game is to clear the nightclub of all the dots and disco balls while avoiding getting eaten by the ghosts. The ghosts are constantly in pursuit of Ms Pac-Man until she eats a disco ball, which then turns the ghosts blue for a short period of time and allows Ms Pac-Man to eat them. The ghosts will regenerate in the centre of the board briefly after being eaten by Ms Pac-Man. If Ms Pac-Man touches a ghost while they are not blue, the game is over.
 
 ### Controls
