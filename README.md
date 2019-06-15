@@ -56,6 +56,8 @@ Criteria 1 and 2 must always be satisfied, and either criteria 3 or criteria 4 m
 #### Blue Ghost Behaviour
 If Ms. Pac-Man eats a disco ball, an interval is triggered where all the ghosts turn blue for ten seconds. If the ghosts are blue, again criteria 1 and 2 still must be satisfied. However, criteria 3 and 4 become the opposite, as the ghosts are now trying to flee from Ms. Pac-Man. If Ms. Pac-Man eats a blue ghost, the ghost disappears and the reset ghost function is invoked, which will reset a default ghost after five seconds in the middle of the board.
 
+![Ghosts Fleeing](https://i.imgur.com/IwzMYaE.gif)
+
 ## Checking for a Win or Loss
 There are two intervals running during the game that are checking on the game's status. One interval runs every second to check if there are any dots remaining on the board, and returning a boolean based on if this is true or false to determine if the user has won the game. The other interval runs every five milliseconds to check for collisions between Ms.Pac-Man and the ghost. In the code, this is represented by checking each of the ghosts indices on the grid for a class of 'pacman', then passing through a conditional to see if the ghost is blue or not. If the ghost is blue, the ghost is killed and reset, and the score is updated. If the ghost is not blue, the user has lost the game and all the intervals on the board are cleared and the game is over.
 
