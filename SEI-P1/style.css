@@ -26,7 +26,6 @@ body {
 
 .dots {
   background-image: url(images/pacman-dots.png);
-  /* background-image: url(images/pill2.gif); */
   background-size: 18px;
   background-repeat: no-repeat;
   background-color: black;
