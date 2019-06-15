@@ -16,22 +16,18 @@ class Ghost extends Character {
 
   //check the move is valid and reassign the direction to follow pacman
   moveIsValid() {
-    let possibleMoves = []
-    let smartMoves = []
-
     if(squares[this.index + this.direction].classList.contains('wall')) {
       return false
     } else {
-      possibleMoves = this.options.filter(option => this.possMoves(option))
-      smartMoves = possibleMoves.filter(move => this.moveIsCloser(move))
+      const smartMoves = this.options.filter(option => this.moveIsSmart(option))
       this.assignDirection(smartMoves)
       return true
     }
   }
 
   //filter out previous direction and moves where there is a wall
-  possMoves(option) {
-    return !squares[this.index + option].classList.contains('wall') && this.index + option !== this.previousIndex
+  moveIsSmart(option) {
+    return !squares[this.index + option].classList.contains('wall') && this.index + option !== this.previousIndex && this.moveIsCloser(option)
   }
 
   //check if the move is further away or closer to pacman
