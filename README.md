@@ -1,4 +1,4 @@
-# SEI-Project-1 - Front-end Game with JavaScript
+# SEI-Project-1 - Front-End Game with JavaScript
 
 
 ## Timeframe
