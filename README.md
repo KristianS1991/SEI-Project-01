@@ -29,7 +29,7 @@ that I created using JavaScript, HTML, and CSS. The aim of the game is to clear 
 The starting point for this game was creating a grid on which to build a maze that the characters would navigate. I decided on a board with dimensions of 20 x 20, so a total of 400 square shaped divs. Building the board consisted of looping over multiple arrays and assigning a class of 'wall', 'dots', 'big-dots', or 'fruit', depending on each index's purpose.
 
 ## Creating the Characters
-At first, I built the characters using only functions to describe how they moved and responded to collisions. The game was functional, however, I noticed I was repeating a lot of code and it was proving difficult to add new characters. After some research online, I learned that I could take a more scalable approach by implementing classes to describe the characters behaviour. I created three different classes to make up the functionality of the characters:
+At first, I built the characters using only functions to describe how they moved and responded to collisions. The game was functional, however, I noticed I was repeating a lot of code and it was proving difficult to add new characters. After some research online, I learned that I could take a more scalable approach by implementing classes to describe the characters behaviour. At any point, a new character can be added to the game simply by creating a new object of the relevant class type. I created three different classes to make up the functionality of the characters:
 1. A **Character** base class
 2. A **Pacman** subclass of the **Character** base class
 3. A **Ghost** subclass of the **Character** base class
