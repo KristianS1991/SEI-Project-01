@@ -46,11 +46,11 @@ The Pacman class is a subclass of the Character class. It contains all the funct
 #### Default Ghost Behaviour
 The Ghost class is a subclass of the Character class. This class describes the automated behaviour
 for all the ghosts on the board. An interval is set to start moving the ghosts as soon as they have rendered. This process begins by selecting a direction at random (up, down, left, or right) and then passing that direction through a series of functions to determine whether or not that move is intelligent or the only possible move. If that direction is found to not be the best move or the only option, that direction is filtered out of the array of options and a new direction is selected from the array until the criteria have been satisfied. That direction is then reassigned as the new direction for the ghost to move in, and a new interval in that direction is set and only cleared when the ghost runs into a wall, or recognizes a more efficient direction. The below list summarizes the criteria that the ghost's new move must meet:
-**1. There must not be a wall in that space.**
-**2. The ghosts cannot go back to a previous index.**
-**3. The move must be closer to Ms Pac-Man. (further if the ghosts are blue)
+1. **There must not be a wall in that space.**
+2. **The ghosts cannot go back to a previous index.**
+3. **The move must be closer to Ms Pac-Man. (further if the ghosts are blue)
           OR**
-**4. There are no possible moves to get closer to Ms Pac-Man.**
+4. **There are no possible moves to get closer to Ms Pac-Man.**
 
 Criteria 1 and 2 must always be satisfied, and either criteria 3 or criteria 4 must be met for the move to be executed. Due to the configuration of the maze, there is not always an option for the the ghost to get closer to Ms. Pac-Man. In this case, the ghost must move in that direction until the interval is cleared (the ghost hits a wall) and a new direction is selected.
 
