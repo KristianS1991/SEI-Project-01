@@ -54,7 +54,7 @@ The below list summarizes the criteria that the ghost's new move must meet:
           OR**
 4. **There are no possible moves to get closer to Ms Pac-Man.**
 
-Criteria 1 and 2 must always be satisfied, and either criteria 3 or criteria 4 must be met for the move to be executed. Due to the configuration of the maze, there is not always an option for the the ghost to get closer to Ms. Pac-Man. In this case, the ghost must move in that direction until the interval is cleared (the ghost hits a wall) and a new direction is selected.
+Criteria 1 and 2 must always be satisfied, and either criteria 3 or criteria 4 must be met for the move to be executed. Due to the configuration of the maze, there is not always an option for the the ghost to get closer to Ms. Pac-Man. In this case, the ghost must move in that direction until the interval is cleared and a new direction is selected.
 
 ![Ghosts Chasing](https://i.imgur.com/SUzJBaM.gif)
 
