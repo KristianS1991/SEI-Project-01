@@ -25,7 +25,7 @@ class Ghost extends Character {
     }
   }
 
-  //filter out previous direction and moves where there is a wall
+  //filter out moves where there is a wall, previous direction, and moves that are further away
   moveIsSmart(option) {
     return !squares[this.index + option].classList.contains('wall') && this.index + option !== this.previousIndex && this.moveIsCloser(option)
   }
