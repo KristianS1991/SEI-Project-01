@@ -14,6 +14,8 @@
 1. Clone or download the repository.
 2. Open the `index.html` page in the browser of your choice.
 
+The hosted version can be played here: https://bit.ly/2YBkm61
+
 ## The Game - Ms Pac-Man, A Night Out in Malibu
 
 ![Ms PacMan Banner](https://i.imgur.com/PtNL3yw.png)
