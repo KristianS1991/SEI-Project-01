@@ -1,4 +1,4 @@
-# SEI Project One, Front-End Game with JavaScript
+# SEI Project 1, Game with JavaScript - 2019
 
 
 ## Timeframe
